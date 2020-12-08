@@ -1,6 +1,6 @@
 
-luaz : lz_require.o lz_loading.o
-	gcc -o $@ $^ -L/usr/local/lib -llua -lm -ldl 
+luaz : require.o loading.o connect.o
+	gcc -o $@ $^ -L/usr/local/lib -llua -lm -ldl -lxgci 
 %.o : %.c
 	gcc -g -c $<
 

@@ -1,5 +1,5 @@
 
-#include "lz_loading.h"
+#include "loading.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -114,9 +114,7 @@ int luaz_close_state(lua_State *state)
 
 lua_State *luaz_new_state(void)
 {
-    lua_State *L ;
-    
-    L = luaL_newstate();
+    lua_State *L = luaL_newstate();
     if(!L)
         return NULL;
 
@@ -139,7 +137,7 @@ lua_State *luaz_new_state(void)
             const char * err = lua_tostring(L, -1);
             if(err)
             {
-                fprintf(stdout, "error: %s\n", err);
+                PRT_ERROR(err);
                 PRT_TAIL_CHR;
                 exit(-1);
             }
@@ -152,7 +150,7 @@ lua_State *luaz_new_state(void)
         const char *err = lua_tostring(L, -1);
         if(err)
         {
-            fprintf(stdout, "error: %s\n", err);
+            PRT_ERROR(err);
             PRT_TAIL_CHR;
             exit(-1);
         }
@@ -160,12 +158,28 @@ lua_State *luaz_new_state(void)
         exit(-1);
     }
 
-    int top = lua_gettop(L); 
     return L; 
 }
 
 
+const char *luaz_get_element(lua_State *L, const char *name)
+{
+    if(!lua_istable(L, -1))
+    {
+        PRT_ERROR("The top element of the stack is not a table object");
+        PRT_TAIL_CHR;
+        exit(-1);
+    }       
 
+    lua_getfield(L, -1, name);
+
+    const char *p = NULL;
+    if(lua_isstring(L, -1))
+        p = lua_tostring(L, -1);
+
+    lua_pop(L, 1);
+    return p;
+}
 
 
 
