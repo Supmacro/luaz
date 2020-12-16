@@ -1,5 +1,7 @@
 
-#include "deps.h"
+#include "lualib.h"
+#include "lua.h"
+#include "lauxlib.h"
 
 static void luaz_set_paths(lua_State *L);
 

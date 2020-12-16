@@ -15,61 +15,58 @@
  * +----------------------------------------------------------------+                                                      
  */
 
-
 #include "xgci.h"
+#include "io.h"
+
+#include "rows.h"
+
 #define SQL_BUF_SIZE 1024
 
 typedef struct{ 
-    XGCIHANDLE  *hd; /* handle ptr */ 
-    int    type;     /* attr type  */
-    void  *val;      /* attr value */
-    
+    XGCIHANDLE *hd;    /* handle ptr */ 
+    int         type;  /* attr type  */
+    short       opt; 
 }ATRBT;
 
-enum dsname {
+/*
+enum xgci_opt {
     host_ip,
     host_port,
     dbname,
     user_name,
     user_passwd,
-    eof,
+    charset,
+    xgcieof,
+};
+*/
+
+struct xgci_err{
+
+    XGCIHANDLE  hd;
+
+    char        errcode[7];
+    char        errmsg[256];
+    unsigned    length;
 };
 
-typedef struct{
-    void  *val;
-    int    rcode;
-    int    size;
-    int    length;
-}column;
-
-
-typedef struct{
-    column  *pcol;    
-    int      cap;    
-}row;
-
 typedef struct {
-   
-    char  *login[eof];
 
     XGCIHANDLE  hdenv;
     XGCIHANDLE  hdsvr;
     XGCIHANDLE  hddbc;
     XGCIHANDLE  hdstmt;
-    XGCIHANDLE  hderr;
+    
+    struct xgci_err ebody;
+    db_value_t      plg[xugueof];
 
-}connect;
+}xugu_conn_t;
 
+#define UTF8    XGCI_CHARSET_UTF8
+#define GBK     XGCI_CHARSET_GBK
+#define GB2312  XGCI_CHARSET_GB2312
 
-typedef struct {
-    enum dsname key;
-    const char *name;
-    char       *value;
-
-}KV;
-
-int xugusql_connect(connect *pconn);
-void xugusql_disconnect(connect *pconn);
-int xugusql_error(XGCIHANDLE hd);
+int xugusql_connect();
+void xugusql_disconnect();
+void xugusql_error();
 
 

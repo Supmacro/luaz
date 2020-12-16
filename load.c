@@ -1,9 +1,9 @@
 
-#include "loading.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "load.h"
+#include "io.h"
 
 static void luaz_set_paths(lua_State *L)
 {
@@ -130,7 +130,7 @@ lua_State *luaz_new_state(void)
     if((rc = luaL_loadfile(L, "config")) != 0)
     {
         lua_getglobal(L, "require");
-        lua_pushstring(L, "config");
+        lua_pushstring(L, "configure");
         
         if(lua_pcall(L, 1, 1, 0))
         {
@@ -162,7 +162,7 @@ lua_State *luaz_new_state(void)
 }
 
 
-const char *luaz_get_element(lua_State *L, const char *name)
+const char *luaz_get_element(lua_State *L,  const char *name)
 {
     if(!lua_istable(L, -1))
     {
