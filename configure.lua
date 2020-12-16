@@ -1,14 +1,31 @@
 
 
-coninfo = {}
-coninfo.host_ip = "127.0.0.1"
-coninfo.host_port = "5139"
-coninfo.dbname = "SYSTEM"
-coninfo.user_name = "SYSDBA"
-coninfo.user_passwd = "SYSDBA"
+luaz = {
 
-coninfo.odbcdsn = "SQL"
-coninfo.odbcuid = "qxj"
-coninfo.odbcpwd = "Aa120110"
+    odbc = {
+            drv1 = {
+                dsn = "SQL",
+                user_name = "qxj",
+                user_passwd = "Aa120110",
+            }
 
-return coninfo 
+            drv2 = {
+                dsn = "odbc",
+                user_name = "qxj",
+                user_passwd = "Aa120110",
+            }
+    }
+
+    xgci = {
+            drv1 = {
+                host_ip = "127.0.0.1",
+                host_port = "5139",
+                dbname = "SYSTEM",
+                user_name = "SYSDBA",
+                user_passwd = "SYSDBA",
+            }
+    }
+
+}
+
+return luaz 

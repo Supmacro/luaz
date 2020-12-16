@@ -15,9 +15,9 @@ int main(int argc, char *argv[])
             OPT("xugusql", user_name, "user_name", "SYSDBA", STRING),
             OPT("xugusql", user_passwd, "user_passwd", "SYSDBA", STRING),
             OPT("xugusql", charset, "charset", "UTF8", INT),
-            OPT("odbc", odbcdsn, "odbcdsn", "SQL", STRING),
-            OPT("odbc", odbcuid, "odbcuid", "qxj", STRING),
-            OPT("odbc", odbcpwd, "odbcpwd", "Aa120110", STRING),
+            OPT("odbc", odbcdsn, "dsn", "SQL", STRING),
+            OPT("odbc", odbcuid, "user_name", "qxj", STRING),
+            OPT("odbc", odbcpwd, "user_passwd", "Aa120110", STRING),
     };
 
     dl_init();
@@ -36,8 +36,8 @@ int main(int argc, char *argv[])
         row_read_db_option(dsn[j], dval + dsn[j].item);
     }
     
-    xugusql_connect();
-    odbc_connect();
+    //xugusql_connect();
+    //odbc_connect();
 
     lua_State *L = luaz_new_state();
 
