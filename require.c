@@ -4,6 +4,8 @@
 
 #include "load.h"
 #include "dlist.h"
+#include "rows.h"
+
 
 int main(int argc, char *argv[])
 {
@@ -21,37 +23,47 @@ int main(int argc, char *argv[])
     };
 
     dl_init();
+    lua_State *L = luaz_new_state();
+    
     int j, sz = sizeof(dsn)/sizeof(KV);
     
     for(j = 0; j < sz; j++)
     {
-        drv_t *driver = dl_find_db_drv(dsn[j].drv_name);
-        if(!driver)
-        {
-            driver = dl_new_db_drv(dsn[j].drv_name);
-            dl_add_db_drv(driver);
-        }
+        do{
+            const char *ud = luaz_parse_driver(L, dsn[j].drv_name);
+            if(!ud){
+                break;
+            }
 
-        db_value_t *dval = driver->drv.dbval;
-        row_read_db_option(dsn[j], dval + dsn[j].item);
+            drv_t *driver = dl_find_db_drv(dsn[j].drv_name, ud);
+            if(!driver){
+                driver = dl_new_db_drv(dsn[j].drv_name, ud);
+                dl_add_db_drv(driver);
+
+                driver->drv.ops.drv_register((void *)(&driver->drv));
+            }
+
+            luaz_pop_elements(L, 1);
+            KV opt = dsn[j];
+
+            const char *p = luaz_get_element(L, opt.name);
+            if(p){
+                opt.value = (char *)p; 
+            }else{
+            
+                luaz_pop_elements(L, 1);
+            }
+
+            row_read_db_option(opt, driver->drv.dbval + opt.item);
+            luaz_pop_elements(L, 1);
+        
+        }while(1);
+
     }
-    
-    //xugusql_connect();
-    //odbc_connect();
 
-    lua_State *L = luaz_new_state();
+    int top = lua_gettop(L);
+    luaz_load_internal_script(L);
 
-    /*
-    for(j = 0; j < eof; j++)
-    {
-        const char *p = luaz_get_element(L, dsn[j].name); 
-        if(j == dsn[j].key){
-            myconn.login[j] = !p ? dsn[j].value : (char *)p;
-            printf("%s:%s\n", dsn[j].name, myconn.login[j]);
-        }
-
-    }
-*/
     luaz_close_state(L);
 
 

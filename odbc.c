@@ -3,13 +3,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "rows.h"
+#include "dlist.h"
 #include "odbc.h"
 
 
-static odbc_conn_t  odbc;
-
-int odbc_connect()
+int odbc_connect(void *voip)
 {
+    odbc_conn_t *conp = (odbc_conn_t *)voip;
 /* SQLAllocHandle allocates an environment, connection, statement or descriptor 
  * handle. This function is a generic function used to allocate handles that 
  * replace the ODBC 2.0 functions SQLAllocConnect, 
@@ -18,7 +19,7 @@ int odbc_connect()
  * to SQLAllocConnect, 
  * SQLAllocEnv or SQLAllocStmt in the driver manager as needed.
  * */
-    int rc = SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &odbc.hdenv);
+    int rc = SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &conp->hdenv);
     if(rc != SQL_SUCCESS){
         PRT_ERROR("Unknown exception");
         PRT_TAIL_CHR;
@@ -32,19 +33,19 @@ int odbc_connect()
  * the environment. Multiple environment handles can be allocated simultaneously 
  * in ODBC 2.x.
  * */
-    rc = SQLSetEnvAttr(odbc.hdenv, SQL_ATTR_ODBC_VERSION, 
+    rc = SQLSetEnvAttr(conp->hdenv, SQL_ATTR_ODBC_VERSION, 
                             (SQLPOINTER)SQL_OV_ODBC3, SQL_IS_INTEGER);
     if(rc != SQL_SUCCESS){
 
-        odbc.ebody.hdtype = SQL_HANDLE_ENV;
-        odbc.ebody.hd = odbc.hdenv;
+        conp->ebody.hdtype = SQL_HANDLE_ENV;
+        conp->ebody.hd = conp->hdenv;
         return -1;
     }
 
-    rc = SQLAllocHandle(SQL_HANDLE_DBC, odbc.hdenv, &odbc.hddbc);
+    rc = SQLAllocHandle(SQL_HANDLE_DBC, conp->hdenv, &conp->hddbc);
     if(rc != SQL_SUCCESS){
-        odbc.ebody.hdtype = SQL_HANDLE_ENV;
-        odbc.ebody.hd = odbc.hdenv;
+        conp->ebody.hdtype = SQL_HANDLE_ENV;
+        conp->ebody.hd = conp->hdenv;
         return -1;
     }
 
@@ -59,11 +60,11 @@ int odbc_connect()
  * prompt the user to enter the data source, user ID and password, and then call 
  * SQLConnect.
  * */
-    rc = SQLConnect(odbc.hddbc, odbc.plg[odbcdsn].value, SQL_NTS, 
-          odbc.plg[odbcuid].value, SQL_NTS, odbc.plg[odbcpwd].value, SQL_NTS);
+    rc = SQLConnect(conp->hddbc, conp->plg[odbcdsn].value, SQL_NTS, 
+          conp->plg[odbcuid].value, SQL_NTS, conp->plg[odbcpwd].value, SQL_NTS);
     if(rc != SQL_SUCCESS){
-        odbc.ebody.hdtype = SQL_HANDLE_DBC;
-        odbc.ebody.hd = odbc.hddbc;
+        conp->ebody.hdtype = SQL_HANDLE_DBC;
+        conp->ebody.hd = conp->hddbc;
         return -1;
     }
 
@@ -78,18 +79,20 @@ int odbc_connect()
  * descriptors that have been explicitly allocated on the connection after 
  * successfully disconnecting from the data source.
  * */
-void odbc_disconnect()
+void odbc_disconnect(void *voip)
 {
-    int rc = SQLDisconnect(odbc.hddbc);
+    odbc_conn_t *conp = (odbc_conn_t *)voip;
+    
+    int rc = SQLDisconnect(conp->hddbc);
     if(rc != SQL_SUCCESS){
         
-        odbc.ebody.hdtype = SQL_HANDLE_DBC;
-        odbc.ebody.hd = odbc.hddbc;
-        odbc_error(&odbc.ebody);
+        conp->ebody.hdtype = SQL_HANDLE_DBC;
+        conp->ebody.hd = conp->hddbc;
+        odbc_error(&conp->ebody);
     }
 
-    SQLFreeHandle(SQL_HANDLE_DBC, odbc.hddbc);
-    SQLFreeHandle(SQL_HANDLE_ENV, odbc.hdenv);
+    SQLFreeHandle(SQL_HANDLE_DBC, conp->hddbc);
+    SQLFreeHandle(SQL_HANDLE_ENV, conp->hdenv);
 }
 
 
@@ -104,9 +107,10 @@ void odbc_disconnect()
  * retrieve the total number of status records by calling SQLGetDiagField for 
  * the header record (record 0) with the SQL_DIAG_NUMBER option.
  * */
-void odbc_error()
+void odbc_error(void *voip)
 {
-    struct odbc_err *pe = &odbc.ebody;
+    odbc_conn_t *conp = (odbc_conn_t *)voip;
+    struct odbc_err *pe = &conp->ebody;
 
     SQLLEN  numRecs = 0;
     SQLGetDiagField(pe->hdtype, pe->hd, 0, SQL_DIAG_NUMBER, &numRecs, 0, 0);
@@ -128,7 +132,17 @@ void odbc_error()
 }
 
 
-void odbc_register_plg(db_value_t **pval)
+void odbc_register_plg(void *voip)
 {
-    *pval = odbc.plg;
+    db_driver_t *db = (db_driver_t *)voip;
+    
+    db->dbconn = calloc(1, sizeof(odbc_conn_t));
+    if(!db->dbconn)
+    {
+        PRT_ERROR("Not enough free memory");
+        PRT_TAIL_CHR;
+        exit(-1);
+    }
+
+    db->dbval = ((odbc_conn_t *)db->dbconn)->plg;
 }

@@ -1,10 +1,4 @@
 
-typedef enum {
-    XGCI = -2,
-    ODBC
-
-}API;
-
 typedef struct{
     void  *val;
     int    rcode;
@@ -28,6 +22,13 @@ enum optype {
     OPT_END
 };
 
+enum odbc_opt {
+    odbcdsn,
+    odbcuid,
+    odbcpwd,
+    odbceof,
+};
+
 enum xgci_opt {
     host_ip,
     host_port,
@@ -35,21 +36,8 @@ enum xgci_opt {
     user_name,
     user_passwd,
     charset,
-    xugueof,
+    xgcieof
 };
-
-enum odbc_inx {
-    odbcdsn,
-    odbcuid,
-    odbcpwd,
-    odbceof,
-};
-
-typedef struct {
-    void    *value;
-    int      length;
-}db_value_t;
-
 
 typedef struct {
     const char  *drv_name;
@@ -67,7 +55,6 @@ typedef struct {
                     .type = OPT_##t     \
             }
 
-db_value_t *row_read_db_option(KV opt, db_value_t *pval);
 char *row_strv_to_upper(char *str);
 
 

@@ -1,6 +1,4 @@
 
-#include "rows.h"
-
 #define DSR_LIST_DELETE(item)       \
         do{                         \
             (item)->p_next->p_prev = (item)->p_prev;  \
@@ -41,18 +39,26 @@ typedef struct drv_list_t {
 
 
 typedef struct{
-    void (*drv_connect)();
-    void (*drv_disconnect)();
-    void (*drv_error)();
-    void (*drv_register)(db_value_t **);
+    int  (*drv_connect)(void *);
+    void (*drv_disconnect)(void *);
+    void (*drv_error)(void *);
+    void (*drv_register)(void *);
 }op_t;
 
 
 typedef struct {
-    const char *drv_name;
+    void  *value;
+    int    length;
 
-    db_value_t *dbval;
+}db_value_t;
+
+typedef struct {
+
+    char *lname;
+    void *dbconn;
+
     op_t  ops;
+    db_value_t *dbval;
     
 }db_driver_t;
 
@@ -63,8 +69,8 @@ typedef struct {
 
 } drv_t;
 
-drv_t *dl_find_db_drv(const char *name);
-drv_t *dl_new_db_drv(const char *name);
+drv_t *dl_find_db_drv(const char *, const char *);
+drv_t *dl_new_db_drv(const char *, const char *);
 drv_t *dl_add_db_drv(drv_t *db);
 drv_t *dl_delete_db_drv(const char *name);
 void dl_init();

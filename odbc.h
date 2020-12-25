@@ -4,16 +4,6 @@
 #include <sqltypes.h>
 
 #include "io.h"
-#include "rows.h"
-
-/*
-enum odbc_inx {
-    odbcdsn,
-    odbcuid,
-    odbcpwd,
-    odbceof,
-};
-*/
 
 struct odbc_err {
     SQLSMALLINT hdtype;
@@ -43,7 +33,7 @@ typedef struct {
  * prompt the user to enter the data source, user ID and password, and then call 
  * SQLConnect.
  * */
-int odbc_connect();
+int odbc_connect(void *);
 
 
 /* 
@@ -53,7 +43,7 @@ int odbc_connect();
  * descriptors that have been explicitly allocated on the connection after 
  * successfully disconnecting from the data source.
  * */
-void odbc_disconnect();
+void odbc_disconnect(void *);
 
 
 /*
@@ -67,4 +57,4 @@ void odbc_disconnect();
  * retrieve the total number of status records by calling SQLGetDiagField for 
  * the header record (record 0) with the SQL_DIAG_NUMBER option.
  * */
-void odbc_error();
+void odbc_error(void *);

@@ -18,27 +18,14 @@
 #include "xgci.h"
 #include "io.h"
 
-#include "rows.h"
-
 #define SQL_BUF_SIZE 1024
+
 
 typedef struct{ 
     XGCIHANDLE *hd;    /* handle ptr */ 
     int         type;  /* attr type  */
     short       opt; 
 }ATRBT;
-
-/*
-enum xgci_opt {
-    host_ip,
-    host_port,
-    dbname,
-    user_name,
-    user_passwd,
-    charset,
-    xgcieof,
-};
-*/
 
 struct xgci_err{
 
@@ -57,7 +44,7 @@ typedef struct {
     XGCIHANDLE  hdstmt;
     
     struct xgci_err ebody;
-    db_value_t      plg[xugueof];
+    db_value_t      plg[xgcieof];
 
 }xugu_conn_t;
 
@@ -65,8 +52,8 @@ typedef struct {
 #define GBK     XGCI_CHARSET_GBK
 #define GB2312  XGCI_CHARSET_GB2312
 
-int xugusql_connect();
-void xugusql_disconnect();
-void xugusql_error();
+int xugusql_connect(void *);
+void xugusql_disconnect(void *);
+void xugusql_error(void *);
 
 

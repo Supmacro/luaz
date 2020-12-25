@@ -3,8 +3,11 @@
 #include <stdlib.h>
 
 #include <string.h>
-#include "xgsql.h"
 
+#include "dlist.h"
+#include "rows.h"
+
+#include "xgsql.h"
 
 db_value_t *row_read_db_option(KV opt, db_value_t *pval)
 {
@@ -70,3 +73,10 @@ char *row_strv_to_upper(char *str)
     return str;
 }
 
+
+void luaz_safe_free(char *p)
+{
+    printf("luaz_safe_free ...\n");
+    if(p)
+        free(p);
+}
