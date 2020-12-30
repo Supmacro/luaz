@@ -1,7 +1,7 @@
 
-#include "lualib.h"
-#include "lua.h"
-#include "lauxlib.h"
+#include "./luajit-2.1/lualib.h"
+#include "./luajit-2.1/lua.h"
+#include "./luajit-2.1/lauxlib.h"
 
 
 static void luaz_set_paths(lua_State *L);
@@ -19,3 +19,5 @@ const char *luaz_get_element(lua_State *L, const char *name);
 const char *luaz_parse_driver(lua_State *L, const char *drv);
 
 void luaz_load_internal_script(lua_State *L);
+
+void luaz_safe_free(void *);

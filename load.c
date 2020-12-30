@@ -229,13 +229,14 @@ const char *luaz_get_element(lua_State *L,  const char *name)
     }       
 
     const char *p = NULL;
-    
-    int type = lua_getfield(L, -1, name);
-    if(type != LUA_TSTRING)
+   
+    lua_getfield(L, -1, name);
+    if(lua_isnil(L, -1))
     {
-        return p;     
+        lua_pop(L, 1);
+        return p;
     }
-
+    
     if(lua_isstring(L, -1))
         p = lua_tostring(L, -1);
 
@@ -246,23 +247,30 @@ const char *luaz_get_element(lua_State *L,  const char *name)
 
 void luaz_load_internal_script(lua_State *L)
 {
-    const char *lz_file[] = {
+    const char *luaz[] = {
                             "./internal/luaz.lua",
     };
+   
 
-    int j, sz = sizeof(lz_file)/sizeof(const char *);
-
+    int j, sz = sizeof(luaz)/sizeof(const char *);
     for(j = 0; j < sz; j++)
     {
-        if(luaL_loadfile(L, lz_file[j]))
+        if(luaL_loadfile(L, luaz[j]))
         {
             PRT_ERROR("luaL_loadfile() failed to load file");
             PRT_TAIL_CHR;
             exit(-1);
         }
-        
+
         lua_call(L, 0, 0);
     }
-    
+
 }
 
+
+void luaz_safe_free(void *p)
+{
+    if(p){
+        free(p);
+    }    
+}

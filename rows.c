@@ -74,9 +74,3 @@ char *row_strv_to_upper(char *str)
 }
 
 
-void luaz_safe_free(char *p)
-{
-    printf("luaz_safe_free ...\n");
-    if(p)
-        free(p);
-}

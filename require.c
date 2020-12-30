@@ -49,9 +49,6 @@ int main(int argc, char *argv[])
             const char *p = luaz_get_element(L, opt.name);
             if(p){
                 opt.value = (char *)p; 
-            }else{
-            
-                luaz_pop_elements(L, 1);
             }
 
             row_read_db_option(opt, driver->drv.dbval + opt.item);
