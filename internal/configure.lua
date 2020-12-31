@@ -4,19 +4,19 @@ luaz = {
 
     odbc = {
             drv1 = {
-                dsn = "SQL",
+                host_dsn = "SQL",
                 user_name = "qxj",
                 user_passwd = "Aa120110",
             },
 
             drv2 = {
-                dsn = "odbc",
+                host_dsn = "odbc",
                 user_name = "qxj",
                 user_passwd = "Aa120110",
             }
     },
 
-    xugusql = {
+    xgci = {
             drv1 = {
                 host_ip = "127.0.0.1",
                 host_port = "5139",

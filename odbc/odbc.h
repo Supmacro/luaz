@@ -3,7 +3,7 @@
 #include <sqlext.h>
 #include <sqltypes.h>
 
-#include "io.h"
+#include "../io.h"
 
 struct odbc_err {
     SQLSMALLINT hdtype;

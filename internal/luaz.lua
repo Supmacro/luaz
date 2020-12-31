@@ -3,10 +3,9 @@
 local ffi = require("ffi")
 
 ffi.cdef [[
-    void malloc(size_t ); 
-    void luaz_safe_free(void *);
+    int db_connect(const char *);
 ]]
 
-str='world'
-print(string.format("Hello, %s", str))
 
+local rc = ffi.C.db_connect("xgci.drv2");
+print(rc)

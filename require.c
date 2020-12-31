@@ -3,23 +3,22 @@
 #include <string.h>
 
 #include "load.h"
-#include "dlist.h"
-#include "rows.h"
+#include "dblist.h"
+#include "option.h"
 
 
 int main(int argc, char *argv[])
 {
     KV dsn[] = {
-
-            OPT("xugusql", host_ip, "host_ip", "127.0.0.1", STRING),
-            OPT("xugusql", host_port, "host_port", "5138", INT),
-            OPT("xugusql", dbname, "dbname", "SYSTEM", STRING),
-            OPT("xugusql", user_name, "user_name", "SYSDBA", STRING),
-            OPT("xugusql", user_passwd, "user_passwd", "SYSDBA", STRING),
-            OPT("xugusql", charset, "charset", "UTF8", INT),
-            OPT("odbc", odbcdsn, "dsn", "SQL", STRING),
-            OPT("odbc", odbcuid, "user_name", "qxj", STRING),
-            OPT("odbc", odbcpwd, "user_passwd", "Aa120110", STRING),
+        OPT("xgci", host_ip  , "IP address of the server host" , "host_ip", "127.0.0.1", STRING),
+        OPT("xgci", host_port, "Port number of the server host", "host_port", "5138", INT),
+        OPT("xgci", dbname   , "The database name of the server login", "dbname", "SYSTEM", STRING),
+        OPT("xgci", user_name, "User name for server login", "user_name", "SYSDBA", STRING),
+        OPT("xgci", user_passwd, "User password for server login", "user_passwd", "SYSDBA", STRING),
+        OPT("xgci", charset  , "The character set of the connection server", "charset", "UTF8", INT),
+        OPT("odbc", host_dsn , "Data source information of the server host", "host_dsn", "A", STRING),
+        OPT("odbc", user_name, "User name for server login", "user_name", "A", STRING),
+        OPT("odbc", user_passwd, "User password for server login", "user_passwd", "A", STRING),
     };
 
     dl_init();
@@ -51,7 +50,7 @@ int main(int argc, char *argv[])
                 opt.value = (char *)p; 
             }
 
-            row_read_db_option(opt, driver->drv.dbval + opt.item);
+            opt_login_argv(opt, driver->drv.dbval + opt.item);
             luaz_pop_elements(L, 1);
         
         }while(1);

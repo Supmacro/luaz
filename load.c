@@ -25,6 +25,7 @@ static void luaz_set_paths(lua_State *L)
      * except that it can only be used when s is a literal. 
      * It will automatically give the length of the string */
     lua_pushliteral(L, "./?.lua;");
+    lua_pushliteral(L, "./internal/?.lua;");
     lua_pushliteral(L, "./?/init.lua;");
 
     const char *home = getenv("HOME");
@@ -38,6 +39,7 @@ static void luaz_set_paths(lua_State *L)
 
     lua_pushliteral(L, "/usr/local/share/lua/5.1/?.lua;");
     lua_pushliteral(L, "/usr/share/lua/5.1/?.lua;");
+    lua_pushliteral(L, "/usr/local/share/luaz/share/?.lua;");
 
     /* Connect the n values at the top of the stack, 
      * then pop these values from the stack, 

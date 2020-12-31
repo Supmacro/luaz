@@ -1,17 +1,4 @@
 
-typedef struct{
-    void  *val;
-    int    rcode;
-    int    size;
-    int    length;
-}column;
-
-
-typedef struct{
-    column  *pcol;    
-    int      cap;    
-}row;
-
 
 enum optype {
     OPT_NULL,
@@ -22,19 +9,15 @@ enum optype {
     OPT_END
 };
 
-enum odbc_opt {
-    odbcdsn,
-    odbcuid,
-    odbcpwd,
-    odbceof,
-};
 
 enum xgci_opt {
-    host_ip,
-    host_port,
-    dbname,
+    host_dsn = 0,
+    host_ip = 0,
     user_name,
     user_passwd,
+    dbname,
+    odbceof = 3,
+    host_port,
     charset,
     xgcieof
 };
@@ -42,19 +25,22 @@ enum xgci_opt {
 typedef struct {
     const char  *drv_name;
     short        item;
+    const char  *desc;
     const char  *name;
     char        *value;
     enum optype  type;
 }KV;
 
-#define OPT(d, k, n, v, t) {            \
+#define OPT(d, k, e, n, v, t) {         \
                     .drv_name = (d),    \
                     .item = (k),        \
+                    .desc = (e),        \
                     .name = (n),        \
                     .value = (v),       \
                     .type = OPT_##t     \
             }
 
-char *row_strv_to_upper(char *str);
+char *opt_upper(char *str);
+void  opt_driver_name(const char *, char *, char *);
 
 

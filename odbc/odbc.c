@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "rows.h"
-#include "dlist.h"
+#include "../option.h"
+#include "../dblist.h"
 #include "odbc.h"
 
 
@@ -60,8 +60,8 @@ int odbc_connect(void *voip)
  * prompt the user to enter the data source, user ID and password, and then call 
  * SQLConnect.
  * */
-    rc = SQLConnect(conp->hddbc, conp->plg[odbcdsn].value, SQL_NTS, 
-          conp->plg[odbcuid].value, SQL_NTS, conp->plg[odbcpwd].value, SQL_NTS);
+    rc = SQLConnect(conp->hddbc, conp->plg[host_dsn].value, SQL_NTS, 
+          conp->plg[user_name].value, SQL_NTS, conp->plg[user_passwd].value, SQL_NTS);
     if(rc != SQL_SUCCESS){
         conp->ebody.hdtype = SQL_HANDLE_DBC;
         conp->ebody.hd = conp->hddbc;

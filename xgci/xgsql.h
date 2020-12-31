@@ -16,7 +16,7 @@
  */
 
 #include "xgci.h"
-#include "io.h"
+#include "../io.h"
 
 #define SQL_BUF_SIZE 1024
 
@@ -52,8 +52,8 @@ typedef struct {
 #define GBK     XGCI_CHARSET_GBK
 #define GB2312  XGCI_CHARSET_GB2312
 
-int xugusql_connect(void *);
-void xugusql_disconnect(void *);
-void xugusql_error(void *);
+int sql_connect(void *);
+void sql_disconnect(void *);
+void sql_error(void *);
 
 

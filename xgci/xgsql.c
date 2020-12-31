@@ -4,15 +4,15 @@
 
 #include <string.h>
 
-#include "rows.h"
-#include "dlist.h"
+#include "../option.h"
+#include "../dblist.h"
 #include "xgsql.h"
 
 
-/* The xugusql_connect() function is used to establish 
+/* The sql_connect() function is used to establish 
  * a new connection with the specified XUGU database server
  */
-int xugusql_connect(void *voip)
+int sql_connect(void *voip)
 {
     xugu_conn_t *conp = (xugu_conn_t *)voip;
 
@@ -61,7 +61,7 @@ int xugusql_connect(void *voip)
 
 
 /* recycle connection resources*/
-void xugusql_disconnect(void *voip)
+void sql_disconnect(void *voip)
 {
     xugu_conn_t *conp = (xugu_conn_t *)voip;
     
@@ -73,9 +73,9 @@ void xugusql_disconnect(void *voip)
 
 
 /* In the structured programming process, when the previous layer of 
- * function call fails, the function xugusql_error() is used to obtain 
+ * function call fails, the function sql_error() is used to obtain 
  * relevant error diagnosis information */
-void xugusql_error(void *voip)
+void sql_error(void *voip)
 {
     xugu_conn_t *conp = (xugu_conn_t *)voip;
     
@@ -94,7 +94,7 @@ void xugusql_error(void *voip)
 }
 
 
-void xugusql_register_plg(void *voip)
+void sql_register_plg(void *voip)
 {
     db_driver_t *db = (db_driver_t *)voip;
 

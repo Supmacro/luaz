@@ -4,12 +4,12 @@
 
 #include <string.h>
 
-#include "dlist.h"
-#include "rows.h"
+#include "dblist.h"
+#include "option.h"
 
-#include "xgsql.h"
+#include "./xgci/xgsql.h"
 
-db_value_t *row_read_db_option(KV opt, db_value_t *pval)
+db_value_t *opt_login_argv(KV opt, db_value_t *pval)
 {
     if(!pval)
         return NULL;
@@ -30,7 +30,7 @@ db_value_t *row_read_db_option(KV opt, db_value_t *pval)
                 char up[256] = {0};
 
                 strcpy(up, opt.value);
-                row_strv_to_upper(up);
+                opt_upper(up);
 
                 if(!strcmp(up, "GBK"))
                 {
@@ -59,7 +59,7 @@ db_value_t *row_read_db_option(KV opt, db_value_t *pval)
 }
 
 
-char *row_strv_to_upper(char *str)
+char *opt_upper(char *str)
 {
     int j = 0;
 
@@ -71,6 +71,24 @@ char *row_strv_to_upper(char *str)
     }
 
     return str;
+}
+
+
+void opt_driver_name(const char *lname, char *d, char *sd) 
+{
+    int j, len = strlen(lname);
+    char *s;
+
+    for(j = 0, s = d; j < len; j++){
+        
+        if(lname[j] == '.'){
+            *s = '\0';
+            s = sd;
+            continue;
+        }
+
+        *s++ = lname[j];
+    }
 }
 
 
