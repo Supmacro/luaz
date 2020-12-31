@@ -10,15 +10,15 @@
 int main(int argc, char *argv[])
 {
     KV dsn[] = {
-        OPT("xgci", host_ip  , "IP address of the server host" , "host_ip", "127.0.0.1", STRING),
-        OPT("xgci", host_port, "Port number of the server host", "host_port", "5138", INT),
-        OPT("xgci", dbname   , "The database name of the server login", "dbname", "SYSTEM", STRING),
-        OPT("xgci", user_name, "User name for server login", "user_name", "SYSDBA", STRING),
-        OPT("xgci", user_passwd, "User password for server login", "user_passwd", "SYSDBA", STRING),
-        OPT("xgci", charset  , "The character set of the connection server", "charset", "UTF8", INT),
-        OPT("odbc", host_dsn , "Data source information of the server host", "host_dsn", "A", STRING),
-        OPT("odbc", user_name, "User name for server login", "user_name", "A", STRING),
-        OPT("odbc", user_passwd, "User password for server login", "user_passwd", "A", STRING),
+        OPT("xgci", host_ip  , "IP address of the server host" , LZ_HOST_IP, "127.0.0.1", STRING),
+        OPT("xgci", host_port, "Port number of the server host", LZ_HOST_PORT, "5138", INT),
+        OPT("xgci", dbname   , "The database name of the server login", LZ_DBNAME, "SYSTEM", STRING),
+        OPT("xgci", user_name, "User name for server login", LZ_USER_NAME, "SYSDBA", STRING),
+        OPT("xgci", user_passwd, "User password for server login", LZ_USER_PASSWD, "SYSDBA", STRING),
+        OPT("xgci", charset  , "The character set of the connection server", LZ_CHARSET, "UTF8", INT),
+        OPT("odbc", host_dsn , "Data source information of the server host", LZ_HOST_DSN, "A", STRING),
+        OPT("odbc", user_name, "User name for server login", LZ_USER_NAME, "A", STRING),
+        OPT("odbc", user_passwd, "User password for server login", LZ_USER_PASSWD, "A", STRING),
     };
 
     dl_init();

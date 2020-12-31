@@ -40,6 +40,14 @@ typedef struct {
                     .type = OPT_##t     \
             }
 
+#define LZ_HOST_IP     "host_ip"
+#define LZ_HOST_PORT   "host_port"
+#define LZ_DBNAME      "dbname"
+#define LZ_USER_NAME   "user_name"
+#define LZ_USER_PASSWD "user_passwd"
+#define LZ_CHARSET     "charset"
+#define LZ_HOST_DSN    "host_dsn"
+
 char *opt_upper(char *str);
 void  opt_driver_name(const char *, char *, char *);
 
