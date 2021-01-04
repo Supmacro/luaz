@@ -29,7 +29,8 @@ drv_t *dl_find_db_drv(const char *name, const char *sname)
     for(pl = phead->p_next; pl != phead; pl = pl->p_next)
     {
         drv_t *db = (drv_t *)(void *)((char *)pl - offsetof(drv_t, list));
-        if(strstr(db->drv.lname, name) && strstr(db->drv.lname, sname)){
+        if(strstr(db->drv.lname, name) && 
+                        !strcmp(db->drv.lname + strlen(name) + 1, sname)){
             return db;
         }
     }
@@ -112,17 +113,5 @@ drv_t *dl_add_db_drv(drv_t *db)
     return db;
 }
 
-/*
-drv_t *dl_delete_db_drv(const char *name)
-{
-    drv_t *rp = dl_find_db_drv(name);
-    if(!rp){
-        return null;
-    }
-
-    DSR_LIST_DELETE(&rp->list);
-    return rp;
-}
-*/
 
 

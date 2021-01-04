@@ -9,6 +9,13 @@
 
 #include "./xgci/xgsql.h"
 
+
+/* 
+ * opt_login_argv() is used to parse the content of the parameter item 
+ * given by the user and process it according to the data type of the 
+ * parameter key value information. 
+ * Each supported and valid key value information will be saved globally.
+ */
 db_value_t *opt_login_argv(KV opt, db_value_t *pval)
 {
     if(!pval)
@@ -19,12 +26,26 @@ db_value_t *opt_login_argv(KV opt, db_value_t *pval)
         case OPT_STRING:
             pval->length = strlen(opt.value);
             pval->value = (void *)strdup(opt.value);
+            if(!pval->value){
+                PRT_ERROR("Not enough free memory");
+                PRT_TAIL_CHR;
+                exit(-1);
+            }
+
             break;
         case OPT_INT:
 
             pval->length = sizeof(int);
             pval->value = calloc(1, pval->length);
-            
+            if(!pval->value){
+                PRT_ERROR("Not enough free memory");
+                PRT_TAIL_CHR;
+                exit(-1);
+            }
+
+/* For the character set in the connection option, currently 
+ * supported character sets are GBK, GB2312, UTF8
+ * */
             if(opt.item == charset)
             {
                 char up[256] = {0};
@@ -89,6 +110,8 @@ void opt_driver_name(const char *lname, char *d, char *sd)
 
         *s++ = lname[j];
     }
+
+    *s = '\0';
 }
 
 

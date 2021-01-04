@@ -79,7 +79,7 @@ struct drvop {
 drv_t *dl_find_db_drv(const char *, const char *);
 drv_t *dl_new_db_drv(const char *, const char *);
 drv_t *dl_add_db_drv(drv_t *db);
-drv_t *dl_delete_db_drv(const char *name);
+
 void dl_init();
 
 
