@@ -36,6 +36,16 @@ typedef struct {
 int odbc_connect(void *);
 
 
+/* <-> SQLPrepare prepares the SQL string to be executed. 
+ * After preparing the statement, the application will use the statement handle to 
+ * refer to the statement in the subsequent function call. 
+ * You can re-execute the pre-defined statement associated with the statement handle 
+ * by calling SQLExecute until the application releases the statement with the 
+ * SQL_DROP option and calls SQLFreeStmt, until it is used in a call to SQLPrepare, 
+ * SQLExecDirect or (SQLColumns, SQLTables, etc.) The statement handle.
+ * */
+int odbc_prepare(void *voip, char *sql);
+
 /* 
  * SQLDisconnect closes the connection associated with a specific connection handle.
  * If the application calls SQLDisconnect before releasing all the statements 

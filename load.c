@@ -239,8 +239,14 @@ const char *luaz_get_element(lua_State *L,  const char *name)
         return p;
     }
     
-    if(lua_isstring(L, -1))
-        p = lua_tostring(L, -1);
+    if(!lua_isstring(L, -1))
+    {
+        PRT_ERROR("Lua configuration file format error");
+        PRT_TAIL_CHR;
+        exit(-1);
+    }
+
+    p = lua_tostring(L, -1);
 
     lua_pop(L, 1);
     return p;
@@ -250,9 +256,11 @@ const char *luaz_get_element(lua_State *L,  const char *name)
 void luaz_load_internal_script(lua_State *L)
 {
     const char *luaz[] = {
-                            "./internal/luaz.lua",
+                            "./internal/dbengine.lua",
     };
    
+
+    int top = lua_gettop(L);
 
     int j, sz = sizeof(luaz)/sizeof(const char *);
     for(j = 0; j < sz; j++)
@@ -267,6 +275,8 @@ void luaz_load_internal_script(lua_State *L)
         lua_call(L, 0, 0);
     }
 
+    top = lua_gettop(L);
+
 }
 
 
@@ -276,3 +286,60 @@ void luaz_safe_free(void *p)
         free(p);
     }    
 }
+
+
+void luaz_load_run_script(lua_State *L, char *script)
+{
+    char *p = strdup(script);
+    if(!p)
+    {
+        PRT_ERROR("Not enough free memory");
+        PRT_TAIL_CHR;
+        exit(-1);
+    }
+
+    char *pos = rindex(p, '.');
+    if(pos && !strcmp(pos, ".lua")){
+        *pos = '\0';
+    }
+
+    int rc;
+
+    if((rc = luaL_loadfile(L, p)) != 0)
+    {
+        lua_getglobal(L, "require");
+        lua_pushstring(L, p);
+
+        if(lua_pcall(L, 1, 1, 0))
+        {
+            const char *err = lua_tostring(L, -1);
+            if(err)
+            {
+                PRT_ERROR(err);
+                PRT_TAIL_CHR;
+                exit(-1);
+            }
+
+            exit(-1);
+        }
+
+        lua_pop(L, 1);
+
+    }else if(lua_pcall(L, 0, 0, 0))
+    {
+        const char *err = lua_tostring(L, -1);
+        if(err)
+        {
+            PRT_ERROR(err);
+            PRT_TAIL_CHR;
+            exit(-1);
+        }
+
+        exit(-1);
+    }
+
+    free(p);
+}
+
+
+

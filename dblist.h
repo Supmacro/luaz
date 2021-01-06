@@ -40,6 +40,8 @@ typedef struct drv_list_t {
 
 typedef struct{
     int  (*drv_connect)(void *);
+    int  (*drv_prepare)(void *, char *);
+
     void (*drv_disconnect)(void *);
     void (*drv_error)(void *);
     void (*drv_register)(void *);
@@ -57,7 +59,9 @@ typedef struct {
     char *lname;
     void *dbconn;
 
+    short vcap;
     op_t  ops;
+
     db_value_t *dbval;
     
 }db_driver_t;
@@ -72,6 +76,7 @@ typedef struct {
 
 struct drvop {
     const char *name;
+    short       attr_cap;
     op_t        ops;
 };
 

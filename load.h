@@ -21,3 +21,5 @@ const char *luaz_parse_driver(lua_State *L, const char *drv);
 void luaz_load_internal_script(lua_State *L);
 
 void luaz_safe_free(void *);
+
+void luaz_load_run_script(lua_State *L, char *script);

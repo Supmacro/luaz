@@ -8,13 +8,19 @@
 
 #include "dblist.h"
 #include "io.h"
+#include "option.h"
 
 extern int sql_connect(void *);
+extern int sql_prepare(void *voip, char *sql);
+
 extern void sql_disconnect(void *);
 extern void sql_error(void *);
 extern void sql_register_plg(void *);
 
+
 extern int odbc_connect(void *);
+extern int odbc_prepare(void *voip, char *sql);
+
 extern void odbc_disconnect(void *);
 extern void odbc_error(void *);
 extern void odbc_register_plg(void *);
@@ -52,17 +58,25 @@ drv_t *dl_new_db_drv(const char *name, const char *sname)
     if(db)
     {
         struct drvop op[] = {
-                    {"odbc", 
-                      {odbc_connect,
-                        odbc_disconnect,
-                        odbc_error,
-                        odbc_register_plg}},
+                    { "odbc",
+                      odbceof,
+                      {
+                          odbc_connect,
+                          odbc_prepare,
+                          odbc_disconnect,
+                          odbc_error,
+                          odbc_register_plg
+                      }},
                     
-                    {"xgci",
-                     {sql_connect,
-                        sql_disconnect,
-                        sql_error,
-                        sql_register_plg}}
+                    { "xgci",
+                      xgcieof,
+                     {
+                         sql_connect,
+                         sql_prepare,
+                         sql_disconnect,
+                         sql_error,
+                         sql_register_plg
+                     }}
             };  
 
         int j, sz = sizeof(op)/sizeof(struct drvop);
@@ -73,7 +87,8 @@ drv_t *dl_new_db_drv(const char *name, const char *sname)
                 continue;
             }
                 
-            db->drv.ops = op[j].ops; 
+            db->drv.ops = op[j].ops;
+            db->drv.vcap = op[j].attr_cap;
             break;
         }
 

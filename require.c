@@ -6,6 +6,7 @@
 #include "dblist.h"
 #include "option.h"
 
+#include "io.h"
 
 int main(int argc, char *argv[])
 {
@@ -16,9 +17,9 @@ int main(int argc, char *argv[])
         OPT("xgci", user_name, "User name for server login", LZ_USER_NAME, "SYSDBA", STRING),
         OPT("xgci", user_passwd, "User password for server login", LZ_USER_PASSWD, "SYSDBA", STRING),
         OPT("xgci", charset  , "The character set of the connection server", LZ_CHARSET, "UTF8", INT),
-        OPT("odbc", host_dsn , "Data source information of the server host", LZ_HOST_DSN, "A", STRING),
-        OPT("odbc", user_name, "User name for server login", LZ_USER_NAME, "A", STRING),
-        OPT("odbc", user_passwd, "User password for server login", LZ_USER_PASSWD, "A", STRING),
+        OPT("odbc", host_dsn , "Data source information of the server host", LZ_HOST_DSN, "N", STRING),
+        OPT("odbc", user_name, "User name for server login", LZ_USER_NAME, "N", STRING),
+        OPT("odbc", user_passwd, "User password for server login", LZ_USER_PASSWD, "N", STRING),
     };
 
     dl_init();
@@ -57,11 +58,20 @@ int main(int argc, char *argv[])
 
     }
 
-    int top = lua_gettop(L);
     luaz_load_internal_script(L);
 
-    luaz_close_state(L);
+    if(argc <= 1)
+    {
+        IO_print_strcat(3, "At least one parameter needs to be passed in as the running script of luaz", 
+           "It can be a file name with'.lua' suffix, or a file name without'.lua' suffix,", 
+                "or the absolute path of the lua script, etc.");
+        PRT_TAIL_CHR;
+        exit(-1);
+    } 
 
+    luaz_load_run_script(L, argv[1]);
+
+    luaz_close_state(L);
 
 }
 

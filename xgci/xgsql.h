@@ -53,6 +53,8 @@ typedef struct {
 #define GB2312  XGCI_CHARSET_GB2312
 
 int sql_connect(void *);
+int sql_prepare(void *voip, char *sql);
+
 void sql_disconnect(void *);
 void sql_error(void *);
 

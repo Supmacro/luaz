@@ -60,6 +60,20 @@ int sql_connect(void *voip)
 }
 
 
+int sql_prepare(void *voip, char *sql)
+{
+    xugu_conn_t *conp = (xugu_conn_t *)voip;
+
+    int rc = XGCIHandleAlloc(conp->hddbc, &conp->hdstmt, HT_STATEMENT);
+    if(rc < 0){
+        conp->ebody.hd = conp->hddbc;
+        return -1;
+    }
+
+    return XGCIPrepare(conp->hdstmt, sql, XGCI_NTS);
+}
+
+
 /* recycle connection resources*/
 void sql_disconnect(void *voip)
 {
