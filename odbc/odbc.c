@@ -33,20 +33,21 @@ int odbc_connect(void *voip)
  * the environment. Multiple environment handles can be allocated simultaneously 
  * in ODBC 2.x.
  * */
+    struct error *pe = &conp->ebody;
+
     rc = SQLSetEnvAttr(conp->hdenv, SQL_ATTR_ODBC_VERSION, 
                             (SQLPOINTER)SQL_OV_ODBC3, SQL_IS_INTEGER);
     if(rc != SQL_SUCCESS){
-
-        conp->ebody.hdtype = SQL_HANDLE_ENV;
-        conp->ebody.hd = conp->hdenv;
-        return -1;
+        pe->hdtype = SQL_HANDLE_ENV;
+        pe->hd = conp->hdenv;
+        return rc;
     }
 
     rc = SQLAllocHandle(SQL_HANDLE_DBC, conp->hdenv, &conp->hddbc);
     if(rc != SQL_SUCCESS){
-        conp->ebody.hdtype = SQL_HANDLE_ENV;
-        conp->ebody.hd = conp->hdenv;
-        return -1;
+        pe->hdtype = SQL_HANDLE_ENV;
+        pe->hd = conp->hdenv;
+        return rc;
     }
 
 /*
@@ -63,16 +64,16 @@ int odbc_connect(void *voip)
     rc = SQLConnect(conp->hddbc, conp->plg[host_dsn].value, SQL_NTS, 
           conp->plg[user_name].value, SQL_NTS, conp->plg[user_passwd].value, SQL_NTS);
     if(rc != SQL_SUCCESS){
-        conp->ebody.hdtype = SQL_HANDLE_DBC;
-        conp->ebody.hd = conp->hddbc;
-        return -1;
+        pe->hdtype = SQL_HANDLE_DBC;
+        pe->hd = conp->hddbc;
+        return rc;
     }
 
-    return 0;
+    return rc;
 }
 
 
-/* <-> SQLPrepare prepares the SQL string to be executed. 
+/* SQLPrepare prepares the SQL string to be executed. 
  * After preparing the statement, the application will use the statement handle to 
  * refer to the statement in the subsequent function call. 
  * You can re-execute the pre-defined statement associated with the statement handle 
@@ -83,14 +84,61 @@ int odbc_connect(void *voip)
 int odbc_prepare(void *voip, char *sql)
 {
     odbc_conn_t *conp = (odbc_conn_t *)voip;
+    struct error *pe = &conp->ebody;
 
     int rc = SQLAllocHandle(SQL_HANDLE_STMT, conp->hddbc, &conp->hdstmt); 
     if(rc != SQL_SUCCESS){
-        conp->ebody.hdtype = SQL_HANDLE_DBC;
-        conp->ebody.hd = conp->hddbc;
+        pe->hdtype = SQL_HANDLE_DBC;
+        pe->hd = conp->hddbc;
+        return rc;
     }
 
-    return SQLPrepare(conp->hdstmt, sql, SQL_NTS);
+    rc = SQLPrepare(conp->hdstmt, sql, SQL_NTS);
+    if(rc != SQL_SUCCESS){
+        pe->hdtype = SQL_HANDLE_STMT;
+        pe->hd = conp->hdstmt;
+        return rc;
+    }
+
+    return rc; 
+}
+
+
+/*
+ * SQLExecute executes the statement prepared by SQLPrepare. 
+ * After the application processes or discards the results from the call to SQLExecute, 
+ * the application can call SQLExecute again with the new parameter values. 
+ * */
+int odbc_execute(void *voip)
+{
+    odbc_conn_t *conp = (odbc_conn_t *)voip;
+    struct error *pe = &conp->ebody;
+   
+    int rc = SQLExecute(conp->hdstmt);
+    if(rc != SQL_SUCCESS){
+        pe->hdtype = SQL_HANDLE_STMT;
+        pe->hd = conp->hdstmt;
+        return rc;
+    }
+
+    return rc;
+}
+
+
+/* SQLFreeHandle is used to release the statement handle */
+int odbc_freehandle(void *voip)
+{
+    odbc_conn_t *conp = (odbc_conn_t *)voip;
+    struct error *pe = &conp->ebody;
+
+    int rc = SQLFreeHandle(SQL_HANDLE_STMT, conp->hdstmt);
+    if(rc != SQL_SUCCESS){
+        pe->hdtype = SQL_HANDLE_STMT;
+        pe->hd = conp->hdstmt;
+        return rc;
+    }
+
+    return rc;
 }
 
 
@@ -101,20 +149,22 @@ int odbc_prepare(void *voip, char *sql)
  * descriptors that have been explicitly allocated on the connection after 
  * successfully disconnecting from the data source.
  * */
-void odbc_disconnect(void *voip)
+int odbc_disconnect(void *voip)
 {
     odbc_conn_t *conp = (odbc_conn_t *)voip;
+    struct error *pe = &conp->ebody;
     
     int rc = SQLDisconnect(conp->hddbc);
     if(rc != SQL_SUCCESS){
-        
-        conp->ebody.hdtype = SQL_HANDLE_DBC;
-        conp->ebody.hd = conp->hddbc;
-        odbc_error(&conp->ebody);
+        pe->hdtype = SQL_HANDLE_DBC;
+        pe->hd = conp->hddbc;
+        return rc;
     }
 
     SQLFreeHandle(SQL_HANDLE_DBC, conp->hddbc);
     SQLFreeHandle(SQL_HANDLE_ENV, conp->hdenv);
+
+    return rc;
 }
 
 
@@ -132,7 +182,7 @@ void odbc_disconnect(void *voip)
 void odbc_error(void *voip)
 {
     odbc_conn_t *conp = (odbc_conn_t *)voip;
-    struct odbc_err *pe = &conp->ebody;
+    struct error *pe = &conp->ebody;
 
     SQLLEN  numRecs = 0;
     SQLGetDiagField(pe->hdtype, pe->hd, 0, SQL_DIAG_NUMBER, &numRecs, 0, 0);
@@ -157,8 +207,9 @@ void odbc_error(void *voip)
 void odbc_register_plg(void *voip)
 {
     db_driver_t *db = (db_driver_t *)voip;
-    
-    db->dbconn = calloc(1, sizeof(odbc_conn_t));
+   
+    db->dbsize = sizeof(odbc_conn_t);
+    db->dbconn = calloc(1, db->dbsize);
     if(!db->dbconn)
     {
         PRT_ERROR("Not enough free memory");

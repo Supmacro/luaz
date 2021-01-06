@@ -3,11 +3,11 @@
 local db = sql.driver("xgci.drv1")
 
 local conn = db:connect()
-local name = db:driver_name()
-print(name)
+local stmt = conn:prepare("INSERT INTO TEST VALUES(1, 'Luaz');");
 
+stmt:execute()
+
+stmt:close()
 conn:close()
-
-db = nil
 
 

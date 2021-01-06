@@ -33,7 +33,6 @@ void IO_print_strcat(int cap, ...)
             }
 
             strcpy(p, tmp);
-            strcat(p, " ");
             continue;
         }
 

@@ -27,7 +27,7 @@ typedef struct{
     short       opt; 
 }ATRBT;
 
-struct xgci_err{
+struct error {
 
     XGCIHANDLE  hd;
 
@@ -42,8 +42,8 @@ typedef struct {
     XGCIHANDLE  hdsvr;
     XGCIHANDLE  hddbc;
     XGCIHANDLE  hdstmt;
-    
-    struct xgci_err ebody;
+
+    struct error ebody;
     db_value_t      plg[xgcieof];
 
 }xugu_conn_t;
@@ -54,8 +54,10 @@ typedef struct {
 
 int sql_connect(void *);
 int sql_prepare(void *voip, char *sql);
+int sql_execute(void *voip);
 
-void sql_disconnect(void *);
+int sql_freehandle(void *voip);
+int sql_disconnect(void *);
+
 void sql_error(void *);
-
 

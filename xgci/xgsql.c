@@ -15,6 +15,7 @@
 int sql_connect(void *voip)
 {
     xugu_conn_t *conp = (xugu_conn_t *)voip;
+    struct error *pe = &conp->ebody;
 
     ATRBT rp[] = {
                 {&conp->hddbc, XGCI_ATTR_SESS_CHARSET, charset},
@@ -22,23 +23,23 @@ int sql_connect(void *voip)
                 {&conp->hdsvr, XGCI_ATTR_SRV_PORT, host_port},
                 {&conp->hdsvr, XGCI_ATTR_SRV_DBNAME, dbname},
     };
-   
+
     int rc = XGCIHandleAlloc(NULL, &conp->hdenv, HT_ENV);
     if(rc < 0){
-        conp->ebody.hd = NULL;
-        return -1; 
+        pe->hd = NULL;
+        return rc; 
     }
 
     rc = XGCIHandleAlloc(conp->hdenv, &conp->hdsvr, HT_SERVER); 
     if(rc < 0){
-        conp->ebody.hd = conp->hdenv;
-        return -1;
+        pe->hd = conp->hdenv;
+        return rc;
     }
 
     rc = XGCIHandleAlloc(conp->hdsvr, &conp->hddbc, HT_SESSION);
     if(rc < 0){
-        conp->ebody.hd = conp->hdsvr;
-        return -1;
+        pe->hd = conp->hdsvr;
+        return rc;
     }
 
     int j, sz = sizeof(rp)/sizeof(ATRBT);
@@ -52,37 +53,84 @@ int sql_connect(void *voip)
     rc = XGCISessionBegin(conp->hddbc, conp->plg[user_name].value, 
                     conp->plg[user_passwd].value);
     if(rc < 0){
-        conp->ebody.hd = conp->hddbc;
-        return -1;
+        pe->hd = conp->hddbc;
+        return rc;
     }
 
-    return 0; 
+    return rc; 
 }
 
 
 int sql_prepare(void *voip, char *sql)
 {
     xugu_conn_t *conp = (xugu_conn_t *)voip;
+    struct error *pe = &conp->ebody;
 
     int rc = XGCIHandleAlloc(conp->hddbc, &conp->hdstmt, HT_STATEMENT);
     if(rc < 0){
-        conp->ebody.hd = conp->hddbc;
-        return -1;
+        pe->hd = conp->hddbc;
+        return rc;
     }
 
-    return XGCIPrepare(conp->hdstmt, sql, XGCI_NTS);
+    rc = XGCIPrepare(conp->hdstmt, sql, XGCI_NTS);
+    if(rc < 0){
+        pe->hd = conp->hdstmt;
+        return rc;
+    }
+
+    return rc;
+}
+
+
+int sql_execute(void *voip)
+{
+    xugu_conn_t *conp = (xugu_conn_t *)voip;
+    struct error *pe = &conp->ebody;
+
+    int rc = XGCIExecute(conp->hdstmt);
+    if(rc < 0){
+        pe->hd = conp->hdstmt;
+        return rc;
+    }
+
+    return rc;
+}
+
+
+/* SQLHandleFree is used to release the statement handle */
+int sql_freehandle(void *voip)
+{
+    xugu_conn_t *conp = (xugu_conn_t *)voip;
+    struct error *pe = &conp->ebody;
+
+    int rc = XGCIHandleFree(conp->hdstmt);
+    if(rc < 0){
+        pe->hd = conp->hdstmt;
+        return rc;
+    }
+
+    conp->hdstmt = NULL;
+    return rc;
 }
 
 
 /* recycle connection resources*/
-void sql_disconnect(void *voip)
+int sql_disconnect(void *voip)
 {
     xugu_conn_t *conp = (xugu_conn_t *)voip;
+    struct error *pe = &conp->ebody;
     
     int rc = XGCISessionEnd(conp->hddbc);
+    if(rc < 0){
+        pe->hd = conp->hddbc;
+        return rc;
+    }
+
     rc = XGCIHandleFree(conp->hddbc);
     rc = XGCIHandleFree(conp->hdsvr);
     rc = XGCIHandleFree(conp->hdenv);
+
+    return rc;
 }
 
 
@@ -92,8 +140,8 @@ void sql_disconnect(void *voip)
 void sql_error(void *voip)
 {
     xugu_conn_t *conp = (xugu_conn_t *)voip;
+    struct error *pe = &conp->ebody;
     
-    struct xgci_err *pe = &conp->ebody;
     if(pe->hd == NULL)
     {
         PRT_ERROR("Unknown exception");
@@ -112,7 +160,8 @@ void sql_register_plg(void *voip)
 {
     db_driver_t *db = (db_driver_t *)voip;
 
-    db->dbconn = calloc(1, sizeof(xugu_conn_t));
+    db->dbsize = sizeof(xugu_conn_t);
+    db->dbconn = calloc(1, db->dbsize);
     if(!db->dbconn)
     {
         PRT_ERROR("Not enough free memory");

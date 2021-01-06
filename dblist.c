@@ -12,16 +12,20 @@
 
 extern int sql_connect(void *);
 extern int sql_prepare(void *voip, char *sql);
+extern int sql_execute(void *);
+extern int sql_freehandle(void *voip);
 
-extern void sql_disconnect(void *);
+extern int sql_disconnect(void *);
 extern void sql_error(void *);
 extern void sql_register_plg(void *);
 
 
 extern int odbc_connect(void *);
 extern int odbc_prepare(void *voip, char *sql);
+extern int odbc_execute(void *);
+extern int odbc_freehandle(void *voip);
 
-extern void odbc_disconnect(void *);
+extern int odbc_disconnect(void *);
 extern void odbc_error(void *);
 extern void odbc_register_plg(void *);
 
@@ -63,6 +67,8 @@ drv_t *dl_new_db_drv(const char *name, const char *sname)
                       {
                           odbc_connect,
                           odbc_prepare,
+                          odbc_execute,
+                          odbc_freehandle,
                           odbc_disconnect,
                           odbc_error,
                           odbc_register_plg
@@ -73,6 +79,8 @@ drv_t *dl_new_db_drv(const char *name, const char *sname)
                      {
                          sql_connect,
                          sql_prepare,
+                         sql_execute,
+                         sql_freehandle,
                          sql_disconnect,
                          sql_error,
                          sql_register_plg

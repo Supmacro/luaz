@@ -43,13 +43,17 @@ ffi.cdef [[
     }db_stmt_t;
 
     db_driver_t *db_loaded(const char *);
+    void db_destroy(db_driver_t *pd);
+    
     db_conn_t *db_connect(db_driver_t *);
     void db_disconnect(db_conn_t *);
+    void db_conn_destroy(db_conn_t *);
 
     db_stmt_t *db_prepare(db_conn_t *, const char *);
+    void db_execute(db_stmt_t *);
+    void db_stmt_close(db_stmt_t *);
+    void db_stmt_destroy(db_stmt_t *);
 
-    void db_conn_destroy(db_conn_t *pconn);
-    void db_destroy(db_driver_t *pd);
 ]]
 
 
@@ -84,11 +88,11 @@ local CI = {}
 
 function CI.prepare(self, sql)
     local stmt = ffi.C.db_prepare(self, sql)
-  --return ffi.gc() 
+    return ffi.gc(stmt, ffi.C.db_stmt_destroy) 
 end
 
 function CI.close(self)
-    return ffi.C.db_disconnect(self)
+    ffi.C.db_disconnect(self)
 end
 
 local cmeta = {
@@ -98,5 +102,23 @@ local cmeta = {
 }
 
 ffi.metatype("db_conn_t", cmeta)
+
+local db_stmt = ffi.typeof('db_stmt_t *')
+local SI = {}
+
+function SI.execute(self)
+    ffi.C.db_execute(self) 
+end
+
+function SI.close(self)
+    ffi.C.db_stmt_close(self);
+end
+
+local smeta = {
+    __index = SI,
+    __tostring = function() return '<db_stmt>' end
+}
+
+ffi.metatype("db_stmt_t", smeta)
 
 

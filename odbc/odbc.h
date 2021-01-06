@@ -5,7 +5,7 @@
 
 #include "../io.h"
 
-struct odbc_err {
+struct error {
     SQLSMALLINT hdtype;
     SQLHANDLE   hd;
 };
@@ -16,7 +16,7 @@ typedef struct {
     SQLHANDLE   hddbc;
     SQLHANDLE   hdstmt;
 
-    struct odbc_err  ebody;
+    struct error  ebody;
     db_value_t       plg[odbceof];
 
 }odbc_conn_t;
@@ -46,6 +46,17 @@ int odbc_connect(void *);
  * */
 int odbc_prepare(void *voip, char *sql);
 
+/*
+ * SQLExecute executes the statement prepared by SQLPrepare. 
+ * After the application processes or discards the results from the call to SQLExecute, 
+ * the application can call SQLExecute again with the new parameter values. 
+ * */
+int odbc_execute(void *voip);
+
+
+/* SQLFreeHandle is used to release the statement handle */        
+int odbc_freehandle(void *voip);
+
 /* 
  * SQLDisconnect closes the connection associated with a specific connection handle.
  * If the application calls SQLDisconnect before releasing all the statements 
@@ -53,7 +64,7 @@ int odbc_prepare(void *voip, char *sql);
  * descriptors that have been explicitly allocated on the connection after 
  * successfully disconnecting from the data source.
  * */
-void odbc_disconnect(void *);
+int odbc_disconnect(void *);
 
 
 /*
