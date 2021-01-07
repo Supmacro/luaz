@@ -4,7 +4,6 @@
 
 #include <string.h>
 
-#include "dblist.h"
 #include "option.h"
 
 #include "./xgci/xgsql.h"

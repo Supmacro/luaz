@@ -3,7 +3,37 @@
 #include <sqlext.h>
 #include <sqltypes.h>
 
+#include "../dblist.h"
 #include "../io.h"
+
+
+typedef struct{
+    enum typeinx  typekey;
+    short         type;
+    short         sql_type;
+
+}type_mapp_t;
+
+#define TYPE_OPT(k, t, s) { \
+                                .typekey = (k),  \
+                                .type = (t),     \
+                                .sql_type = (s)}
+
+
+#define I_YEAR    I_INTERVAL_YEAR
+#define I_MONTH   I_INTERVAL_MONTH
+#define I_DAY     I_INTERVAL_DAY
+#define I_HOUR    I_INTERVAL_HOUR
+#define I_MINUTE  I_INTERVAL_MINUTE
+#define I_SECOND  I_INTERVAL_SECOND
+#define I_Y2M     I_INTERVAL_YEAR_TO_MONTH
+#define I_D2H     I_INTERVAL_DAY_TO_HOUR
+#define I_D2M     I_INTERVAL_DAY_TO_MINUTE
+#define I_D2S     I_INTERVAL_DAY_TO_SECOND
+#define I_H2M     I_INTERVAL_HOUR_TO_MINUTE
+#define I_H2S     I_INTERVAL_HOUR_TO_SECOND
+#define I_M2S     I_INTERVAL_MINUTE_TO_SECOND
+
 
 struct error {
     SQLSMALLINT hdtype;
@@ -45,6 +75,13 @@ int odbc_connect(void *);
  * SQLExecDirect or (SQLColumns, SQLTables, etc.) The statement handle.
  * */
 int odbc_prepare(void *voip, char *sql);
+
+/*
+ * SQLBindParameter binds the buffer to the parameter marker in the SQL statement. 
+ * SQLBindParameter supports binding to unicode C data types, 
+ * even if the base driver does not support unicode data. 
+ * */
+int odbc_bindparam(void *voip, db_param_t *param, int no);
 
 /*
  * SQLExecute executes the statement prepared by SQLPrepare. 

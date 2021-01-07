@@ -4,8 +4,46 @@
 #include <string.h>
 
 #include "../option.h"
-#include "../dblist.h"
 #include "odbc.h"
+
+
+
+static type_mapp_t type_ODBC[] = {
+
+        TYPE_OPT(I_TINYINT        ,  SQL_TINYINT                  , SQL_C_TINYINT),
+        TYPE_OPT(I_SMALLINT       ,  SQL_SMALLINT                 , SQL_C_SHORT),
+        TYPE_OPT(I_INTEGER        ,  SQL_INTEGER                  , SQL_C_LONG),
+        TYPE_OPT(I_BIGINT         ,  SQL_BIGINT                   , SQL_C_SBIGINT),
+        TYPE_OPT(I_FLOAT          ,  SQL_FLOAT                    , SQL_C_FLOAT),
+        TYPE_OPT(I_DOUBLE         ,  SQL_DOUBLE                   , SQL_C_DOUBLE),
+        TYPE_OPT(I_NUMERIC        ,  SQL_NUMERIC                  , SQL_C_NUMERIC),
+        TYPE_OPT(I_CHAR           ,  SQL_CHAR                     , SQL_C_CHAR),
+        TYPE_OPT(I_VARCHAR        ,  SQL_CHAR                     , SQL_C_CHAR),
+        TYPE_OPT(I_CLOB           ,  SQL_LONGVARCHAR              , SQL_C_CHAR),
+        TYPE_OPT(I_GUID           ,  SQL_CHAR                     , SQL_C_CHAR),
+        TYPE_OPT(I_BOOLEAN        ,  SQL_CHAR                     , SQL_C_CHAR),
+        TYPE_OPT(I_BLOB           ,  SQL_LONGVARBINARY            , SQL_C_BINARY),
+        TYPE_OPT(I_BINARY         ,  SQL_BINARY                   , SQL_C_BINARY),
+        TYPE_OPT(I_DATE           ,  SQL_DATE                     , SQL_C_DATE),
+        TYPE_OPT(I_DATETIME       ,  SQL_DATETIME                 , SQL_C_CHAR),
+        TYPE_OPT(I_DATETIME_TZONE ,  SQL_CHAR                     , SQL_C_CHAR),
+        TYPE_OPT(I_TIME           ,  SQL_TIME                     , SQL_C_TIME),
+        TYPE_OPT(I_TIME_TZONE     ,  SQL_CHAR                     , SQL_C_CHAR),
+        TYPE_OPT(I_YEAR           ,  SQL_INTERVAL_YEAR            , SQL_C_CHAR),
+        TYPE_OPT(I_MONTH          ,  SQL_INTERVAL_MONTH           , SQL_C_CHAR),
+        TYPE_OPT(I_DAY            ,  SQL_INTERVAL_DAY             , SQL_C_CHAR),
+        TYPE_OPT(I_HOUR           ,  SQL_INTERVAL_HOUR            , SQL_C_CHAR),
+        TYPE_OPT(I_MINUTE         ,  SQL_INTERVAL_MINUTE          , SQL_C_CHAR),
+        TYPE_OPT(I_SECOND         ,  SQL_INTERVAL_SECOND          , SQL_C_CHAR),
+        TYPE_OPT(I_Y2M            ,  SQL_INTERVAL_YEAR_TO_MONTH   , SQL_C_CHAR),
+        TYPE_OPT(I_D2H            ,  SQL_INTERVAL_DAY_TO_HOUR     , SQL_C_CHAR),
+        TYPE_OPT(I_D2M            ,  SQL_INTERVAL_DAY_TO_MINUTE   , SQL_C_CHAR),
+        TYPE_OPT(I_D2S            ,  SQL_INTERVAL_DAY_TO_SECOND   , SQL_C_CHAR),
+        TYPE_OPT(I_H2M            ,  SQL_INTERVAL_HOUR_TO_MINUTE  , SQL_C_CHAR),
+        TYPE_OPT(I_H2S            ,  SQL_INTERVAL_HOUR_TO_SECOND  , SQL_C_CHAR),
+        TYPE_OPT(I_M2S            ,  SQL_INTERVAL_MINUTE_TO_SECOND, SQL_C_CHAR)
+
+};
 
 
 int odbc_connect(void *voip)
@@ -101,6 +139,28 @@ int odbc_prepare(void *voip, char *sql)
     }
 
     return rc; 
+}
+
+
+/*
+ * SQLBindParameter binds the buffer to the parameter marker in the SQL statement. 
+ * SQLBindParameter supports binding to unicode C data types, 
+ * even if the base driver does not support unicode data. 
+ * */
+int odbc_bindparam(void *voip, db_param_t *param, int no)
+{
+    odbc_conn_t *conp = (odbc_conn_t *)voip;
+    struct error *pe = &conp->ebody;
+
+    int rc = SQLBindParameter(conp->hdstmt, no, param->IOtype, param->type, param->sql_type, 
+                    param->len_max, 0, param->value, param->len_max, (SQLLEN*)&param->len);
+    if(rc < 0){
+        pe->hdtype = SQL_HANDLE_STMT;
+        pe->hd = conp->hdstmt;
+        return rc;
+    }
+
+    return rc;
 }
 
 

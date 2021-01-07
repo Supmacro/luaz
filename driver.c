@@ -7,7 +7,6 @@
 #include "option.h"
 
 #include "io.h"
-#include "driver.h"
 
 
 extern void  opt_driver_name(const char *, char *, char *);
@@ -149,6 +148,21 @@ db_stmt_t *db_prepare(db_conn_t *pconn, const char *sql)
 }
 
 
+void db_bind_parameter(db_stmt_t *pstmt, db_param_t *params, int pcap)
+{
+    db_driver_t *pd = (db_driver_t *)pstmt->pdb;
+
+    int j;
+
+    for(j = 0; j < pcap; j++)
+    {
+        if(pd->ops.drv_bindparam(pstmt->connect, params+j, j+1)){
+            pd->ops.drv_error(pstmt->connect);
+        }
+    }
+}
+
+
 void db_execute(db_stmt_t *pstmt)
 {
     db_driver_t *pd = (db_driver_t *)pstmt->pdb;
@@ -156,7 +170,6 @@ void db_execute(db_stmt_t *pstmt)
     if(pd->ops.drv_execute(pstmt->connect)){
         pd->ops.drv_error(pstmt->connect);
     }
-        
 }
 
 

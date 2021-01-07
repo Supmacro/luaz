@@ -256,11 +256,15 @@ const char *luaz_get_element(lua_State *L,  const char *name)
 void luaz_load_internal_script(lua_State *L)
 {
     const char *luaz[] = {
+                            "./internal/dbtype.lua",
                             "./internal/dbengine.lua",
     };
    
 
     int top = lua_gettop(L);
+
+    lua_newtable(L);
+    lua_setglobal(L, "sql");
 
     int j, sz = sizeof(luaz)/sizeof(const char *);
     for(j = 0; j < sz; j++)

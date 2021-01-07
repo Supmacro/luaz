@@ -5,8 +5,44 @@
 #include <string.h>
 
 #include "../option.h"
-#include "../dblist.h"
 #include "xgsql.h"
+
+
+static type_mapp_t type_XGCI[] = {
+
+        TYPE_OPT(I_TINYINT        ,  XG_C_TINYINT   ,  SQL_TINYINT                  ),
+        TYPE_OPT(I_SMALLINT       ,  XG_C_SHORT     ,  SQL_SMALLINT                 ),
+        TYPE_OPT(I_INTEGER        ,  XG_C_INTEGER   ,  SQL_INTEGER                  ),
+        TYPE_OPT(I_BIGINT         ,  XG_C_BIGINT    ,  SQL_BIGINT                   ),
+        TYPE_OPT(I_FLOAT          ,  XG_C_FLOAT     ,  SQL_FLOAT                    ),
+        TYPE_OPT(I_DOUBLE         ,  XG_C_DOUBLE    ,  SQL_DOUBLE                   ),
+        TYPE_OPT(I_NUMERIC        ,  XG_C_NUMERIC   ,  SQL_NUMERIC                  ),
+        TYPE_OPT(I_CHAR           ,  XG_C_CHAR      ,  SQL_CHAR                     ),
+        TYPE_OPT(I_VARCHAR        ,  XG_C_CHAR      ,  SQL_CHAR                     ),
+        TYPE_OPT(I_CLOB           ,  XG_C_LOB       ,  SQL_CLOB                     ),
+        TYPE_OPT(I_GUID           ,  XG_C_CHAR      ,  SQL_CHAR                     ),
+        TYPE_OPT(I_BOOLEAN        ,  XG_C_BOOL      ,  SQL_BOOL                     ),
+        TYPE_OPT(I_BLOB           ,  XG_C_LOB       ,  SQL_BLOB                     ),
+        TYPE_OPT(I_BINARY         ,  XG_C_BINARY    ,  SQL_BINARY                   ),
+        TYPE_OPT(I_DATE           ,  XG_C_DATE      ,  SQL_DATE                     ),
+        TYPE_OPT(I_DATETIME       ,  XG_C_DATETIME  ,  SQL_DATETIME                 ),
+        TYPE_OPT(I_DATETIME_TZONE ,  XG_C_CHAR      ,  SQL_CHAR                     ),
+        TYPE_OPT(I_TIME           ,  XG_C_TIME      ,  SQL_TIME                     ),
+        TYPE_OPT(I_TIME_TZONE     ,  XG_C_CHAR      ,  SQL_CHAR                     ),
+        TYPE_OPT(I_YEAR           ,  XG_C_INTERVAL  ,  SQL_INTERVAL_YEAR            ),
+        TYPE_OPT(I_MONTH          ,  XG_C_INTERVAL  ,  SQL_INTERVAL_MONTH           ),
+        TYPE_OPT(I_DAY            ,  XG_C_INTERVAL  ,  SQL_INTERVAL_DAY             ),
+        TYPE_OPT(I_HOUR           ,  XG_C_INTERVAL  ,  SQL_INTERVAL_HOUR            ),
+        TYPE_OPT(I_MINUTE         ,  XG_C_INTERVAL  ,  SQL_INTERVAL_MINUTE          ),
+        TYPE_OPT(I_SECOND         ,  XG_C_INTERVAL  ,  SQL_INTERVAL_SECOND          ),
+        TYPE_OPT(I_Y2M            ,  XG_C_INTERVAL  ,  SQL_INTERVAL_YEAR_TO_MONTH   ),
+        TYPE_OPT(I_D2H            ,  XG_C_INTERVAL  ,  SQL_INTERVAL_DAY_TO_HOUR     ),
+        TYPE_OPT(I_D2M            ,  XG_C_INTERVAL  ,  SQL_INTERVAL_DAY_TO_MINUTE   ),
+        TYPE_OPT(I_D2S            ,  XG_C_INTERVAL  ,  SQL_INTERVAL_DAY_TO_SECOND   ),
+        TYPE_OPT(I_H2M            ,  XG_C_INTERVAL  ,  SQL_INTERVAL_HOUR_TO_MINUTE  ),
+        TYPE_OPT(I_H2S            ,  XG_C_INTERVAL  ,  SQL_INTERVAL_HOUR_TO_SECOND  ),
+        TYPE_OPT(I_M2S            ,  XG_C_INTERVAL  ,  SQL_INTERVAL_MINUTE_TO_SECOND)
+}; 
 
 
 /* The sql_connect() function is used to establish 
@@ -73,6 +109,22 @@ int sql_prepare(void *voip, char *sql)
     }
 
     rc = XGCIPrepare(conp->hdstmt, sql, XGCI_NTS);
+    if(rc < 0){
+        pe->hd = conp->hdstmt;
+        return rc;
+    }
+
+    return rc;
+}
+
+
+int sql_bindparam(void *voip, db_param_t *param, int no)
+{
+    xugu_conn_t *conp = (xugu_conn_t *)voip;
+    struct error *pe = &conp->ebody;
+
+    int rc = XGCIBindParamByPos(conp->hdstmt, no, param->IOtype, param->value, 
+               param->len_max, param->type, &param->rcode, &param->len, param->sql_type);
     if(rc < 0){
         pe->hd = conp->hdstmt;
         return rc;

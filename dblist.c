@@ -10,8 +10,10 @@
 #include "io.h"
 #include "option.h"
 
+
 extern int sql_connect(void *);
 extern int sql_prepare(void *voip, char *sql);
+extern int sql_bindparam(void *voip, db_param_t *param, int no);
 extern int sql_execute(void *);
 extern int sql_freehandle(void *voip);
 
@@ -22,6 +24,7 @@ extern void sql_register_plg(void *);
 
 extern int odbc_connect(void *);
 extern int odbc_prepare(void *voip, char *sql);
+extern int odbc_bindparam(void *voip, db_param_t *param, int no);
 extern int odbc_execute(void *);
 extern int odbc_freehandle(void *voip);
 
@@ -67,6 +70,7 @@ drv_t *dl_new_db_drv(const char *name, const char *sname)
                       {
                           odbc_connect,
                           odbc_prepare,
+                          odbc_bindparam,
                           odbc_execute,
                           odbc_freehandle,
                           odbc_disconnect,
@@ -79,6 +83,7 @@ drv_t *dl_new_db_drv(const char *name, const char *sname)
                      {
                          sql_connect,
                          sql_prepare,
+                         sql_bindparam,
                          sql_execute,
                          sql_freehandle,
                          sql_disconnect,

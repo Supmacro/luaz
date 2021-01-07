@@ -1,4 +1,6 @@
 
+#include "driver.h"
+
 #define DSR_LIST_DELETE(item)       \
         do{                         \
             (item)->p_next->p_prev = (item)->p_prev;  \
@@ -41,6 +43,7 @@ typedef struct drv_list_t {
 typedef struct{
     int  (*drv_connect)(void *);
     int  (*drv_prepare)(void *, char *);
+    int  (*drv_bindparam)(void *, db_param_t *, int);
     int  (*drv_execute)(void *);
     int  (*drv_freestmt)(void *);
 
