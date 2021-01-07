@@ -123,8 +123,9 @@ int sql_bindparam(void *voip, db_param_t *param, int no)
     xugu_conn_t *conp = (xugu_conn_t *)voip;
     struct error *pe = &conp->ebody;
 
-    int rc = XGCIBindParamByPos(conp->hdstmt, no, param->IOtype, param->value, 
-               param->len_max, param->type, &param->rcode, &param->len, param->sql_type);
+    int rc = XGCIBindParamByPos(conp->hdstmt, no, param->IOtype, param->value, param->len_max, 
+                    type_XGCI[param->type].type, 
+                    &param->rcode, &param->len, type_XGCI[param->type].sql_type);
     if(rc < 0){
         pe->hd = conp->hdstmt;
         return rc;

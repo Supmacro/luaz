@@ -74,7 +74,6 @@ typedef struct{
     int     IOtype;
     int     rcode;
     short   type;
-    short   sql_type;
 
 }db_param_t;
 
