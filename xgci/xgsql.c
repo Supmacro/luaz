@@ -45,6 +45,13 @@ static type_mapp_t type_XGCI[] = {
 }; 
 
 
+static param_iotype pio[] = {
+                                {PIO_INPUT       , PARAM_IN   },
+                                {PIO_INPUT_OUTPUT, PARAM_OUT  },
+                                {PIO_OUTPUT      , PARAM_INOUT}
+            }; 
+
+
 /* The sql_connect() function is used to establish 
  * a new connection with the specified XUGU database server
  */
@@ -123,7 +130,7 @@ int sql_bindparam(void *voip, db_param_t *param, int no)
     xugu_conn_t *conp = (xugu_conn_t *)voip;
     struct error *pe = &conp->ebody;
 
-    int rc = XGCIBindParamByPos(conp->hdstmt, no, param->IOtype, param->value, param->len_max, 
+    int rc = XGCIBindParamByPos(conp->hdstmt, no, pio[param->iot].iotype, param->value, param->len_max, 
                     type_XGCI[param->type].type, 
                     &param->rcode, &param->len, type_XGCI[param->type].sql_type);
     if(rc < 0){

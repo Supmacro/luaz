@@ -36,6 +36,12 @@
 #define I_M2S     I_INTERVAL_MINUTE_TO_SECOND
 
 
+typedef struct {
+    enum ioty     pkey;
+    short         iotype;
+
+}param_iotype;
+
 typedef struct{
     enum typeinx  typekey;
     short         type;

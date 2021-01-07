@@ -5,13 +5,9 @@ local ffi = require("ffi")
 ffi.cdef [[
 
     typedef enum {
-        XGCI_PARAM_INPUT = 1,
-        XGCI_PARAM_OUTPUT,
-        XGCI_PARAM_INPUT_OUTPUT,
-
-        ODBC_PARAM_INPUT = 1,
-        ODBC_PARAM_INPUT_OUTPUT,
-        ODBC_PARAM_OUTPUT = 4
+        PIO_INPUT,
+        PIO_INPUT_OUTPUT,
+        PIO_OUTPUT
     }param_type;
 
     typedef enum {
@@ -98,5 +94,10 @@ sql.type = {
     INTERVAL_MINUTE_TO_SECOND = ffi.C.INTERVAL_MINUTE_TO_SECOND
 }
 
+sql.pio = {
+    PARAM_INPUT = ffi.C.PIO_INPUT,
+    PARAM_INPUT_OUTPUT = ffi.C.PIO_INPUT_OUTPUT.
+    PARAM_OUTPUT = ffi.C.PIO_OUTPUT
+}
 
 

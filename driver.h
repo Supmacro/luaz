@@ -40,6 +40,14 @@ enum typeinx {
 };
 
 
+enum ioty {
+
+        PIO_INPUT,
+        PIO_INPUT_OUTPUT,
+        PIO_OUTPUT
+}; 
+
+
 typedef struct{
     
     void   *pdb;
@@ -71,7 +79,7 @@ typedef struct{
     int     len;
     int     len_max;
 
-    int     IOtype;
+    int     iot;
     int     rcode;
     short   type;
 

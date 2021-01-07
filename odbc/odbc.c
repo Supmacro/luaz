@@ -46,6 +46,13 @@ static type_mapp_t type_ODBC[] = {
 };
 
 
+static param_iotype pio[] = {
+                                {PIO_INPUT        , SQL_PARAM_INPUT},
+                                {PIO_INPUT_OUTPUT , SQL_PARAM_INPUT_OUTPUT},
+                                {PIO_OUTPUT       , SQL_PARAM_OUTPUT}
+        };
+
+
 int odbc_connect(void *voip)
 {
     odbc_conn_t *conp = (odbc_conn_t *)voip;
@@ -152,7 +159,7 @@ int odbc_bindparam(void *voip, db_param_t *param, int no)
     odbc_conn_t *conp = (odbc_conn_t *)voip;
     struct error *pe = &conp->ebody;
 
-    int rc = SQLBindParameter(conp->hdstmt, no, param->IOtype, type_ODBC[param->type].type, 
+    int rc = SQLBindParameter(conp->hdstmt, no, pio[param->iot].iotype, type_ODBC[param->type].type, 
                     type_ODBC[param->type].sql_type, 
                     param->len_max, 0, param->value, param->len_max, (SQLLEN*)&param->len);
     if(rc < 0){

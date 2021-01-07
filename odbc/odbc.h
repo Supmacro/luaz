@@ -19,6 +19,12 @@ typedef struct{
                                 .type = (t),     \
                                 .sql_type = (s)}
 
+typedef struct{
+    enum ioty     pkey;
+    short         iotype;
+
+}param_iotype;
+
 
 #define I_YEAR    I_INTERVAL_YEAR
 #define I_MONTH   I_INTERVAL_MONTH

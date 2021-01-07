@@ -45,10 +45,9 @@ ffi.cdef [[
         int     len;
         int     len_max;
 
-        int     IOtype;
+        int     iot;
         int     rcode;
         short   type;
-        short   sql_type;
     
     }db_param_t;
 
@@ -138,7 +137,7 @@ function SI.bindParam(self, ...)
         binds[i].len = param.len
         binds[i].len_max = param.len_max
         binds[i].type = param.type
-        binds[i].IOtype = param.IOtype
+        binds[i].iot = param.iotype
     end
 
     ffi.C.db_bind_parameter(self, binds, pcap)
