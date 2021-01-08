@@ -271,7 +271,8 @@ void luaz_load_internal_script(lua_State *L)
     {
         if(luaL_loadfile(L, luaz[j]))
         {
-            PRT_ERROR("luaL_loadfile() failed to load file");
+            IO_print_strcat(3, "luaL_loadfile() failed to load file '", 
+                            luaz[j], "'");
             PRT_TAIL_CHR;
             exit(-1);
         }
