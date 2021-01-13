@@ -3,15 +3,20 @@
 local db = sql.driver("xgci.drv1")
 
 local conn = db:connect()
-local stmt = conn:prepare("INSERT INTO TEST VALUES(1, 'Luaz');");
+local stmt = conn:prepare("INSERT INTO TEST VALUES(?, ?);");
 
---stmt:bindParam({sql.type.CHAR, sql.PIO_INPUT, 64, value},
---               {sql.type.CHAR, sql.PIO_INPUT_OUTPUT, 64, value},
---               {sql.type.CHAR, sql.PIO_OUTPUT, 64, value})
+local param = {
+    stmt:bind_create(sql.type.INTEGER, 8),
+    stmt:bind_create(sql.type.CHAR, 32)
+}
+
+stmt:bind_param(unpack(param))
+
+param[1]:set(666)
+param[2]:set("SEX")
+
 stmt:execute()
 
 stmt:close()
 conn:close()
 
-
-print(type(conn))

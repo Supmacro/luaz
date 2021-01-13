@@ -76,7 +76,7 @@ typedef struct{
 typedef struct{
 
     void   *value;
-    int     len;
+    int    *len;
     int     len_max;
 
     int     iot;

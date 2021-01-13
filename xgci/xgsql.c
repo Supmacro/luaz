@@ -132,7 +132,7 @@ int sql_bindparam(void *voip, db_param_t *param, int no)
 
     int rc = XGCIBindParamByPos(conp->hdstmt, no, pio[param->iot].iotype, param->value, param->len_max, 
                     type_XGCI[param->type].type, 
-                    &param->rcode, &param->len, type_XGCI[param->type].sql_type);
+                    &param->rcode, param->len, type_XGCI[param->type].sql_type);
     if(rc < 0){
         pe->hd = conp->hdstmt;
         return rc;

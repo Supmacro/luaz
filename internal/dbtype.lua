@@ -91,35 +91,49 @@ sql.type = {
     INTERVAL_DAY_TO_SECOND = ffi.C.INTERVAL_DAY_TO_SECOND,
     INTERVAL_HOUR_TO_MINUTE = ffi.C.INTERVAL_HOUR_TO_MINUTE,
     INTERVAL_HOUR_TO_SECOND = ffi.C.INTERVAL_HOUR_TO_SECOND,
-    INTERVAL_MINUTE_TO_SECOND = ffi.C.INTERVAL_MINUTE_TO_SECOND
+    INTERVAL_MINUTE_TO_SECOND = ffi.C.INTERVAL_MINUTE_TO_SECOND,
+
+    PARAM_INPUT = ffi.C.PIO_INPUT,
+    PARAM_INPUT_OUTPUT = ffi.C.PIO_INPUT_OUTPUT,
+    PARAM_OUTPUT = ffi.C.PIO_OUTPUT
 }
 
---[[
-sql = {
-    PARAM_INPUT = ffi.C.PIO_INPUT,
-    PARAM_INPUT_OUTPUT = ffi.C.PIO_INPUT_OUTPUT.
-    PARAM_OUTPUT = ffi.C.PIO_OUTPUT
-} --]]
 
---[[
 sql.map = {
 
-    {sql.type.TINYINT   , max_len =  1,   ctype = 'char[?]'   },
-    {sql.type.SMALLINT  , max_len =  2,   ctype = 'short[?]'  },
-    {sql.type.INTEGER   , max_len =  4,   ctype = 'int[?]'    },
-    {sql.type.BIGINT    , max_len =  8,   ctype = 'int64_t[?]'},
-    {sql.type.FLOAT     , max_len =  4,   ctype = 'float[?]'  },
-    {sql.type.DOUBLE    , max_len =  8,   ctype = 'double[?]' },
-    {sql.type.NUMERIC   , max_len = -1,   ctype = 'char[?]'   },
-    {sql.type.CHAR      , max_len = -1,   ctype = 'char[?]'   },
-    {sql.type.VARCHAR   , max_len = -1,   ctype = 'char[?]'   },
-    {sql.type.CLOB      , max_len = -1,   ctype = 'char[?]'   },
-    {sql.type.GUID      , max_len = -1,   ctype = 'char[?]'   },
-    {sql.type.BOOLEAN   , max_len =  1,   ctype = 'char[?]'   },
-    {sql.type.BLOB      , max_len = -1,   ctype = 'char[?]'   },
-
-}
---]]
+    sql.type.TINYINT  ,
+    sql.type.SMALLINT ,
+    sql.type.INTEGER  ,
+    sql.type.BIGINT   , 
+    sql.type.FLOAT    , 
+    sql.type.DOUBLE   , 
+    sql.type.CHAR     ,  
+    sql.type.CHAR     ,
+    sql.type.CHAR     ,
+    sql.type.CLOB     ,
+    sql.type.CHAR     ,
+    sql.type.BOOLEAN  ,
+    sql.type.BLOB     ,
+    sql.type.BINARY   ,
+    sql.type.CHAR     ,
+    sql.type.CHAR     ,
+    sql.type.CHAR     ,
+    sql.type.CHAR     ,
+    sql.type.CHAR     ,
+    sql.type.CHAR     ,
+    sql.type.CHAR     ,
+    sql.type.CHAR     ,
+    sql.type.CHAR     ,
+    sql.type.CHAR     ,
+    sql.type.CHAR     ,
+    sql.type.CHAR     ,
+    sql.type.CHAR     ,
+    sql.type.CHAR     , 
+    sql.type.CHAR     , 
+    sql.type.CHAR     , 
+    sql.type.CHAR     , 
+    sql.type.CHAR  
+} 
 
 
 

@@ -161,7 +161,7 @@ int odbc_bindparam(void *voip, db_param_t *param, int no)
 
     int rc = SQLBindParameter(conp->hdstmt, no, pio[param->iot].iotype, type_ODBC[param->type].type, 
                     type_ODBC[param->type].sql_type, 
-                    param->len_max, 0, param->value, param->len_max, (SQLLEN*)&param->len);
+                    param->len_max, 0, param->value, param->len_max, (SQLLEN*)param->len);
     if(rc < 0){
         pe->hdtype = SQL_HANDLE_STMT;
         pe->hd = conp->hdstmt;
