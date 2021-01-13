@@ -1,0 +1,3 @@
+
+
+SUBDIRS = src internal script 

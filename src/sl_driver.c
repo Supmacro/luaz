@@ -19,7 +19,7 @@ db_driver_t *db_loaded(const char *lname)
     drv_t *p = dl_find_db_drv(name, s_name);
     if(!p)
     {
-        IO_print_strcat(6, "Cannot find the driver named ',", name, ".", s_name, 
+        pipe_stdout(6, "Cannot find the driver named ',", name, ".", s_name, 
            "'. Please carefully confirm the parameter information of 'sql.driver()'. ", 
          "This parameter needs to be configured in the configuration file'configure.lua' ", 
             "before it can be used legally.");
@@ -34,7 +34,7 @@ db_driver_t *db_loaded(const char *lname)
 void db_destroy(db_driver_t *pd)
 {
     if(!pd){
-        IO_print_strcat(2, "GC received a null pointer, the pointer type is'db_driver_t *',",
+        pipe_stdout(2, "GC received a null pointer, the pointer type is'db_driver_t *',",
                        " and the calling function is db_destroy");
         PRT_TAIL_CHR;
         exit(-1);
@@ -89,7 +89,7 @@ void db_conn_destroy(db_conn_t *pconn)
 {
     if(!pconn->Isdown)
     {     
-        IO_print_strcat(2, "Before GC, there are unclosed connections, ",
+        pipe_stdout(2, "Before GC, there are unclosed connections, ",
                      "please check the execution script information carefully");
         PRT_TAIL_CHR;
         exit(-1);
@@ -190,7 +190,7 @@ void db_stmt_destroy(db_stmt_t *pstmt)
 {
     if(!pstmt->Isclose)
     {
-        IO_print_strcat(2, "Before GC, there are unreleased statement handles, ",
+        pipe_stdout(2, "Before GC, there are unreleased statement handles, ",
                         "please check the execution script information carefully");
         PRT_TAIL_CHR;
         exit(-1);

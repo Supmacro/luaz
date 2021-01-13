@@ -3,4 +3,7 @@
 #define PRT_TAIL_CHR  fprintf(stdout, "\n");
 
 
-void IO_print_strcat(int cap, ...);
+void pipe_stdout(int n, ...);
+
+void  pipe_topath(char top[], char pgname[]);
+

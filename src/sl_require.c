@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 
     if(argc <= 1)
     {
-        IO_print_strcat(3, "At least one parameter needs to be passed in as the running script of luaz", 
+        pipe_stdout(3, "At least one parameter needs to be passed in as the running script of luaz", 
            "It can be a file name with'.lua' suffix, or a file name without'.lua' suffix,", 
                 "or the absolute path of the lua script, etc.");
         PRT_TAIL_CHR;

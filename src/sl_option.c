@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "sl_option.h"
-#include "./xgci/xgsql.h"
+#include "sl_xgsql.h"
 
 
 /* 

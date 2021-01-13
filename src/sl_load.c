@@ -6,6 +6,10 @@
 #include "sl_load.h"
 #include "sl_pipe.h"
 
+
+static char binpath[256] = {0};
+static char biname[64] = {0};
+
 static void luaz_set_paths(lua_State *L)
 {
     /*
@@ -28,6 +32,20 @@ static void luaz_set_paths(lua_State *L)
     lua_pushliteral(L, "./internal/?.lua;");
     lua_pushliteral(L, "./?/init.lua;");
 
+    pipe_topath(binpath, biname);
+   
+    if(!strlen(binpath) || !strlen(biname))
+    {
+        PRT_ERROR("Unable to get the startup path of the program");
+        PRT_TAIL_CHR;
+        exit(1);
+    }
+
+    char curpath[512] = {0};
+
+    sprintf(curpath, "%s/?.lua", binpath);
+    lua_pushlstring(L, curpath, strlen(curpath));
+
     const char *home = getenv("HOME");
     if(home)
     {
@@ -37,9 +55,19 @@ static void luaz_set_paths(lua_State *L)
         lua_pushstring(L, "/.luarocks/share/lua/?.lua;");
     }
 
-    lua_pushliteral(L, "/usr/local/share/lua/5.1/?.lua;");
+    char path[256] = "/usr/local/etc/";
+
+    strcat(path, biname);
+    strcat(path, "/?.lua;");
+
+    lua_pushlstring(L, path, strlen(path));
     lua_pushliteral(L, "/usr/share/lua/5.1/?.lua;");
-    lua_pushliteral(L, "/usr/local/share/luaz/share/?.lua;");
+
+    bzero(path, 256);
+    strcat(path, "/usr/local/share/");
+    strcat(path, biname);
+    strcat(path, "/?.lua;");
+    lua_pushlstring(L, path, strlen(path));
 
     /* Connect the n values at the top of the stack, 
      * then pop these values from the stack, 
@@ -128,12 +156,16 @@ lua_State *luaz_new_state(void)
      * It is equivalent to lua_createtable(L, 0, 0) */
     //lua_newtable(L);
     
+    char load[256] = "/usr/local/etc/"; 
     int rc;
 
-    if((rc = luaL_loadfile(L, "configure")) != 0)
+    strcat(load, biname);
+    strcat(load, "/sql.driver.lua");
+
+    if((rc = luaL_loadfile(L, load)) != 0)
     {
         lua_getglobal(L, "require");
-        lua_pushstring(L, "configure");
+        lua_pushstring(L, "sql.driver.lua");
         
         if(lua_pcall(L, 1, 1, 0))
         {
@@ -147,8 +179,18 @@ lua_State *luaz_new_state(void)
     
             exit(-1);
         }
+    
+        do{
+            int top = lua_gettop(L);
+            if(top == 1)
+                break;
+        
+            int pos = top * (-1);
+            lua_remove(L, pos);
+    
+        }while(1);
 
-    }else if(lua_pcall(L, 0, 0, 0))
+    }else if(lua_pcall(L, 0, 1, 0))
     {
         const char *err = lua_tostring(L, -1);
         if(err)
@@ -160,16 +202,6 @@ lua_State *luaz_new_state(void)
 
         exit(-1);
     }
-
-    do{
-        int top = lua_gettop(L);
-        if(top == 1)
-            break;
-        
-        int pos = top * (-1);
-        lua_remove(L, pos);
-    
-    }while(1);
 
     return L; 
 }
@@ -256,10 +288,9 @@ const char *luaz_get_element(lua_State *L,  const char *name)
 void luaz_load_internal_script(lua_State *L)
 {
     const char *luaz[] = {
-                            "./internal/dbtype.lua",
-                            "./internal/dbengine.lua",
-    };
-   
+                            "/sql.type.lua",
+                            "/sql.bind.lua",
+                    };
 
     int top = lua_gettop(L);
 
@@ -269,10 +300,15 @@ void luaz_load_internal_script(lua_State *L)
     int j, sz = sizeof(luaz)/sizeof(const char *);
     for(j = 0; j < sz; j++)
     {
-        if(luaL_loadfile(L, luaz[j]))
+        char load[256] = "/usr/local/etc/";
+
+        strcat(load, biname);
+        strcat(load, luaz[j]);
+
+        if(luaL_loadfile(L, load))
         {
-            IO_print_strcat(3, "luaL_loadfile() failed to load file '", 
-                            luaz[j], "'");
+            pipe_stdout(3, "luaL_loadfile() failed to load file '", 
+                            load, "'");
             PRT_TAIL_CHR;
             exit(-1);
         }

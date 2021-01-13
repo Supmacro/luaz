@@ -3,8 +3,8 @@
 #include <sqlext.h>
 #include <sqltypes.h>
 
-#include "../sl_list.h"
-#include "../sl_pipe.h"
+#include "sl_list.h"
+#include "sl_pipe.h"
 
 
 typedef struct{
