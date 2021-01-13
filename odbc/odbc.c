@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../option.h"
+#include "../sl_option.h"
 #include "odbc.h"
 
 

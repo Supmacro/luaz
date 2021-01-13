@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "load.h"
-#include "dblist.h"
-#include "option.h"
+#include "sl_load.h"
+#include "sl_list.h"
+#include "sl_option.h"
 
-#include "io.h"
+#include "sl_pipe.h"
 
 int main(int argc, char *argv[])
 {

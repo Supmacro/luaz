@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "io.h"
+#include "sl_pipe.h"
 
 void IO_print_strcat(int cap, ...)
 {

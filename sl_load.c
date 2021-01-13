@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "load.h"
-#include "io.h"
+#include "sl_load.h"
+#include "sl_pipe.h"
 
 static void luaz_set_paths(lua_State *L)
 {

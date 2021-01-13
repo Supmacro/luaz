@@ -17,8 +17,8 @@
 
 #include "xgci.h"
 
-#include "../dblist.h"
-#include "../io.h"
+#include "../sl_list.h"
+#include "../sl_pipe.h"
 #define SQL_BUF_SIZE 1024
 
 #define I_YEAR    I_INTERVAL_YEAR

@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "dblist.h"
-#include "option.h"
+#include "sl_list.h"
+#include "sl_option.h"
 
-#include "io.h"
+#include "sl_pipe.h"
 
 
 extern void  opt_driver_name(const char *, char *, char *);
