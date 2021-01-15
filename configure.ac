@@ -31,6 +31,6 @@ AC_CHECK_FUNCS([bzero strchr strdup strstr])
 
 AC_CONFIG_FILES([Makefile
                  internal/Makefile
-                 script/Makefile
+                 sh/Makefile
                  src/Makefile])
 AC_OUTPUT

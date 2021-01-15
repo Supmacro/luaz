@@ -1,3 +1,3 @@
 
 
-SUBDIRS = src internal script 
+SUBDIRS = src internal sh 

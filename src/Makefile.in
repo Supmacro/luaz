@@ -90,9 +90,9 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_luaz_OBJECTS = sl_driver.$(OBJEXT) sl_list.$(OBJEXT) \
-	sl_load.$(OBJEXT) sl_option.$(OBJEXT) sl_pipe.$(OBJEXT) \
-	sl_require.$(OBJEXT) sl_odbc.$(OBJEXT) sl_xgsql.$(OBJEXT)
+am_luaz_OBJECTS = lz_driver.$(OBJEXT) lz_list.$(OBJEXT) \
+	lz_load.$(OBJEXT) lz_option.$(OBJEXT) lz_pipe.$(OBJEXT) \
+	lz_require.$(OBJEXT) lz_odbc.$(OBJEXT) lz_xgsql.$(OBJEXT)
 luaz_OBJECTS = $(am_luaz_OBJECTS)
 luaz_DEPENDENCIES =
 luaz_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(luaz_LDFLAGS) $(LDFLAGS) \
@@ -239,9 +239,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-luaz_SOURCES = sl_driver.c sl_driver.h sl_list.c sl_list.h sl_load.c sl_load.h sl_option.c \
-				sl_option.h sl_pipe.c sl_pipe.h sl_require.c sl_odbc.c sl_odbc.h sl_xgsql.c \
-				sl_xgsql.h
+luaz_SOURCES = lz_driver.c lz_driver.h lz_list.c lz_list.h lz_load.c lz_load.h lz_option.c \
+				lz_option.h lz_pipe.c lz_pipe.h lz_require.c lz_odbc.c lz_odbc.h lz_xgsql.c \
+				lz_xgsql.h
 
 luaz_LDADD = -lluajit-5.1 -ldl -lxgci -lodbc -lodbcinst
 luaz_LDFLAGS = -rdynamic
@@ -332,14 +332,14 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sl_driver.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sl_list.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sl_load.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sl_odbc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sl_option.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sl_pipe.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sl_require.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sl_xgsql.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lz_driver.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lz_list.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lz_load.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lz_odbc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lz_option.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lz_pipe.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lz_require.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lz_xgsql.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
