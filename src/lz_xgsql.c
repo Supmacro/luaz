@@ -4,8 +4,8 @@
 
 #include <string.h>
 
-#include "sl_option.h"
-#include "sl_xgsql.h"
+#include "lz_option.h"
+#include "lz_xgsql.h"
 
 
 static type_mapp_t type_XGCI[] = {

@@ -6,9 +6,9 @@
 #include <unistd.h>
 #include <stddef.h>
 
-#include "sl_list.h"
-#include "sl_pipe.h"
-#include "sl_option.h"
+#include "lz_list.h"
+#include "lz_pipe.h"
+#include "lz_option.h"
 
 
 extern int sql_connect(void *);

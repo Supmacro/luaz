@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "sl_pipe.h"
+#include "lz_pipe.h"
 
 
 void pipe_stdout(int n, ...)

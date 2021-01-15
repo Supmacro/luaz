@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "sl_load.h"
-#include "sl_pipe.h"
+#include "lz_load.h"
+#include "lz_pipe.h"
 
 
 static char binpath[256] = {0};
