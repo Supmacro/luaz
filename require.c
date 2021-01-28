@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lz_load.h"
-#include "lz_list.h"
-#include "lz_option.h"
+#include "load.h"
+#include "list.h"
+#include "option.h"
 
-#include "lz_pipe.h"
+#include "pipe.h"
 
 int main(int argc, char *argv[])
 {

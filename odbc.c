@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lz_option.h"
-#include "lz_odbc.h"
+#include "option.h"
+#include "odbc.h"
 
 
 

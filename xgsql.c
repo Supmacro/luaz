@@ -4,8 +4,8 @@
 
 #include <string.h>
 
-#include "lz_option.h"
-#include "lz_xgsql.h"
+#include "option.h"
+#include "xgsql.h"
 
 
 static type_mapp_t type_XGCI[] = {
@@ -131,8 +131,8 @@ int sql_bindparam(void *voip, db_param_t *param, int no)
     struct error *pe = &conp->ebody;
 
     int rc = XGCIBindParamByPos(conp->hdstmt, no, pio[param->iot].iotype, param->value, param->len_max, 
-                    type_XGCI[param->type].type, 
-                    &param->rcode, param->len, type_XGCI[param->type].sql_type);
+                    type_XGCI[param->type - 1].type, 
+                    &param->rcode, param->len, type_XGCI[param->type - 1].sql_type);
     if(rc < 0){
         pe->hd = conp->hdstmt;
         return rc;

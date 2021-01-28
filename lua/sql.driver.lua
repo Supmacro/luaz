@@ -1,6 +1,6 @@
 
 
-luaz = {
+driver = {
 
     odbc = {
             drv1 = {
@@ -37,4 +37,4 @@ luaz = {
 
 }
 
-return luaz 
+return  driver 

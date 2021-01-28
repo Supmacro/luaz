@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "lz_list.h"
-#include "lz_option.h"
+#include "list.h"
+#include "option.h"
 
-#include "lz_pipe.h"
+#include "pipe.h"
 
 
 extern void  opt_driver_name(const char *, char *, char *);

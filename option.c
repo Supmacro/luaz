@@ -4,8 +4,8 @@
 
 #include <string.h>
 
-#include "lz_option.h"
-#include "lz_xgsql.h"
+#include "option.h"
+#include "xgsql.h"
 
 
 /* 

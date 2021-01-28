@@ -1,24 +1,28 @@
 
 /* 
- * +================================================================+
- * | XGCI (Xugu DB C Call Interface).                               |
- * +----------------------------------------------------------------+                                                      
- * |                                                                |
- * |             ____ ____   ________   _______   ____              |
- * |            |    |    | /        | /       \ |    |             |
- * |             \       / |    _____||    _____||    |             |
- * |             /       \ |    |_   ||         ||    |             |
- * |            |____|____| \________| \_______/ |____|             |                              
- * |                                                                |
- * | Copyright © Xugu Weiye Technology Co., Ltd.                    |
- * | All rights reserved.                                           |                    
- * +----------------------------------------------------------------+                                                      
+ * +====================================================================+
+ * | XGCI (Xugu DB C Call Interface).                                   |
+ * +--------------------------------------------------------------------+                                                      
+ * |                                                                    |
+ * |               ____ ____   ________   _______   ____                |
+ * |              |    |    | /        | /       \ |    |               |
+ * |               \       / |    _____||    _____||    |               |
+ * |               /       \ |    |_   ||         ||    |               |
+ * |              |____|____| \________| \_______/ |____|               |                              
+ * |                                                                    |
+ * |                                                                    |
+ * |    XGCI is a dedicated C/C++ programming language access interface |                                                          
+ * | for xugu database, independently developed by the company, with    |
+ * | high performance and high stability.                               |
+ * |    Copyright © Xugu Weiye Technology Co., Ltd.                     |
+ * |    All rights reserved.                                            |                    
+ * +--------------------------------------------------------------------+                                                      
  */
 
 #include "xgci.h"
 
-#include "lz_list.h"
-#include "lz_pipe.h"
+#include "list.h"
+#include "pipe.h"
 #define SQL_BUF_SIZE 1024
 
 #define I_YEAR    I_INTERVAL_YEAR

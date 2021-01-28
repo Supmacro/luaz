@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lz_load.h"
-#include "lz_pipe.h"
+#include "load.h"
+#include "pipe.h"
 
 
 static char binpath[256] = {0};
@@ -29,7 +29,7 @@ static void luaz_set_paths(lua_State *L)
      * except that it can only be used when s is a literal. 
      * It will automatically give the length of the string */
     lua_pushliteral(L, "./?.lua;");
-    lua_pushliteral(L, "./internal/?.lua;");
+    lua_pushliteral(L, "./lua/?.lua;");
     lua_pushliteral(L, "./?/init.lua;");
 
     pipe_topath(binpath, biname);
@@ -339,9 +339,12 @@ void luaz_load_run_script(lua_State *L, char *script)
         exit(-1);
     }
 
-    char *pos = rindex(p, '.');
-    if(pos && !strcmp(pos, ".lua")){
-        *pos = '\0';
+    if(p[0] != '/')
+    {
+        char *pos = rindex(p, '.');
+        if(pos && !strcmp(pos, ".lua")){
+            *pos = '\0';
+        }
     }
 
     int rc;

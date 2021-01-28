@@ -1,3 +1,0 @@
-
-
-SUBDIRS = src internal sh 
