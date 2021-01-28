@@ -29,7 +29,7 @@ static void luaz_set_paths(lua_State *L)
      * except that it can only be used when s is a literal. 
      * It will automatically give the length of the string */
     lua_pushliteral(L, "./?.lua;");
-    lua_pushliteral(L, "./lua/?.lua;");
+    lua_pushliteral(L, "./internal/?.lua;");
     lua_pushliteral(L, "./?/init.lua;");
 
     pipe_topath(binpath, biname);
